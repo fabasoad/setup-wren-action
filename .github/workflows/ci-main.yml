@@ -1,0 +1,32 @@
+---
+name: CI (main)
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  unit_tests:
+    name: Unit Tests
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:      
+      - uses: actions/checkout@v2.3.3
+      - uses: actions/setup-node@v2.1.1
+        with:
+          node-version: '14'
+      - run: yarn install
+      - run: yarn run lint
+      - run: yarn run test
+        if: startsWith(github.ref, 'refs/heads/bugfix/') || startsWith(github.ref, 'refs/heads/feature/')
+      - uses: paambaati/codeclimate-action@v2.7.4
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageCommand: yarn run test
+          debug: true
