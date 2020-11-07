@@ -1,11 +1,11 @@
 {
-  "name": "{PROJECT_NAME}",
+  "name": "setup-wren-action",
   "version": "1.0.0",
-  "description": "This GitHub action installs {PROJECT_TITLE}",
+  "description": "This GitHub action installs wren",
   "main": "dist/index.js",
   "repository": {
     "type": "git",
-    "url": "git@github.com:fabasoad/{PROJECT_NAME}.git"
+    "url": "git@github.com:fabasoad/setup-wren-action.git"
   },
   "scripts": {
     "build": "ncc build -m src/index.ts",
@@ -19,13 +19,14 @@
   ],
   "author": "Yevhen Fabizhevskyi",
   "license": "MIT",
-  "homepage": "https://github.com/fabasoad/{PROJECT_NAME}#readme",
+  "homepage": "https://github.com/fabasoad/setup-wren-action#readme",
   "dependencies": {
     "@actions/core": "1.2.6"
   },
   "devDependencies": {
     "@types/jest": "26.0.15",
     "@types/node": "14.11.2",
+    "@typescript-eslint/eslint-plugin": "^4.6.1",
     "@typescript-eslint/parser": "4.6.1",
     "@zeit/ncc": "0.22.3",
     "eslint": "7.12.1",
