@@ -1,0 +1,15 @@
+---
+  name: 'Setup Wren CLI'
+  author: Yevhen Fabizhevskyi
+  description: 'This action sets up a Wren scripting language.'
+  branding:
+    icon: file-text
+    color: white
+  inputs:
+    version:
+      description: 'Wren CLI version.'
+      required: true
+  runs:
+    using: 'node12'
+    main: 'dist/index.js'
+  
