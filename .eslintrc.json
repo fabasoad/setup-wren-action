@@ -33,6 +33,7 @@
       }
     ],
     "object-curly-spacing": "off",
+    "require-jsdoc": "off",
     "semi": "off"
   }
 }
