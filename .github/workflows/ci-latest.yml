@@ -20,4 +20,5 @@ jobs:
           node-version: '14'
       - run: yarn install
       - run: yarn run lint
+      - run: snyk auth ${{ secrets.SNYK_API_TOKEN }}
       - run: yarn run test
