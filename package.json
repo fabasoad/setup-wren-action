@@ -41,7 +41,7 @@
     "mocha-param": "2.0.1",
     "sinon": "9.2.1",
     "snyk": "1.424.4",
-    "ts-jest": "26.4.3",
+    "ts-jest": "26.4.4",
     "typescript": "4.0.5"
   },
   "snyk": true
