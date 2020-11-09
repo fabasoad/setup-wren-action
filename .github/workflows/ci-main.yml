@@ -31,3 +31,18 @@ jobs:
         with:
           coverageCommand: yarn run test
           debug: true
+  functional_tests:
+    name: Functional tests
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
+        version: ['0.3.0']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - uses: ./
+        with:
+          version: ${{ matrix.version }}
+      - name: Run script
+        run: wren_cli ./hello-world.wren
