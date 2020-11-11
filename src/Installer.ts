@@ -9,7 +9,7 @@ import LoggerFactory from './LoggerFactory'
 
 type AddPathType = (inputPath: string) => void
 
-export interface ToolCache {
+export interface IToolCache {
   cacheDir(sourceDir: string, tool: string, version: string, arch?: string):
     Promise<string>
   downloadTool(url: string, dest?: string, auth?: string): Promise<string>
@@ -22,12 +22,12 @@ export default class Installer {
   version: string
   logger: Logger
   addPath: AddPathType
-  toolCache: ToolCache
+  toolCache: IToolCache
 
   constructor(
     version: string,
     addPath: AddPathType = core.addPath,
-    toolCache: ToolCache = tc) {
+    toolCache: IToolCache = tc) {
     this.version = version
     this.logger = LoggerFactory.create('Installer')
     this.addPath = addPath
@@ -42,6 +42,19 @@ export default class Installer {
     let folderPath: string = path.dirname(zipPath)
     this.logger.info(`Unzipped ${zipPath} to ${folderPath}`)
     folderPath = await this.toolCache.extractZip(zipPath, folderPath)
+    // -----
+    fs.readdir(folderPath, (err, files) => {
+      // handling error
+      if (err) {
+        return console.log('Unable to scan directory: ' + err);
+      }
+      // listing all files using forEach
+      files.forEach(function(file) {
+        // Do whatever you want to do with the file
+        console.log(file);
+      });
+    });
+    // -----
     const filePath: string = path.join(folderPath, this.EXEC_FILE)
     this.logger.info(`Wren CLI path is ${filePath}`)
     fs.chmodSync(filePath, '777')

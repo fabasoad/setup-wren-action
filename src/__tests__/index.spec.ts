@@ -1,11 +1,11 @@
 import { InputOptions } from '@actions/core'
 import { assert } from 'chai'
-import { InputProvider, run } from '../index'
+import { IInputProvider, run } from '../index'
 import Installer from '../Installer'
 
 const TEST_VERSION: string = 'y5e30fn1xt'
 
-class InputProviderMock implements InputProvider {
+class InputProviderMock implements IInputProvider {
   getInput(name: string, options?: InputOptions): string {
     assert.isUndefined(options)
     assert.equal(name, 'version')

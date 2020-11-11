@@ -4,14 +4,14 @@ import itParam from 'mocha-param'
 import os from 'os'
 import path from 'path'
 import { restore, SinonStub, stub } from 'sinon'
-import Installer, { ToolCache } from '../Installer'
+import Installer, { IToolCache } from '../Installer'
 
-interface FixtureItem {
+interface IFixtureItem {
   type: string,
   suffix: string
 }
 
-const fixture: Array<FixtureItem> = [
+const fixture: Array<IFixtureItem> = [
   { type: 'Darwin', suffix: 'mac' },
   { type: 'Linux', suffix: 'linux' },
   { type: 'Windows', suffix: 'windows' }
@@ -40,7 +40,7 @@ describe('Test Installer class', () => {
   itParam(
     'should install correctly for ${value.type} OS',
     fixture,
-    async (supportedOS: FixtureItem) => {
+    async (supportedOS: IFixtureItem) => {
       const execFile: string = 'wren_cli'
       const folderPath: string = 'x2no1z63'
       const zipPath: string = folderPath + path.sep + 'gke7d78i.zip'
@@ -53,7 +53,7 @@ describe('Test Installer class', () => {
       cacheDirMocked.mockImplementation(() => Promise.resolve(cachedPath))
       extractZipMocked.mockImplementation(() => Promise.resolve(folderPath))
 
-      const toolCacheMock: ToolCache = {
+      const toolCacheMock: IToolCache = {
         cacheDir: cacheDirMocked,
         downloadTool: downloadToolMocked,
         extractZip: extractZipMocked
@@ -80,7 +80,7 @@ describe('Test Installer class', () => {
   itParam(
     'should build correct url for ${value.type} OS',
     fixture,
-    (supportedOS: FixtureItem) => {
+    (supportedOS: IFixtureItem) => {
       osTypeStub.returns(supportedOS.type)
 
       const version: string = 'y50pgz2b'
