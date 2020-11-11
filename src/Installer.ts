@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import * as core from '@actions/core'
+import * as c from '@actions/core'
 import * as tc from '@actions/tool-cache'
 import fs from 'fs'
 import os from 'os'
@@ -7,7 +7,10 @@ import path from 'path'
 import { Logger } from 'winston'
 import LoggerFactory from './LoggerFactory'
 
-type AddPathType = (inputPath: string) => void
+export interface ICore {
+  addPath(inputPath: string): void
+  error(message: string | Error): void
+}
 
 export interface IToolCache {
   cacheDir(sourceDir: string, tool: string, version: string, arch?: string):
@@ -21,16 +24,16 @@ export default class Installer {
 
   version: string
   logger: Logger
-  addPath: AddPathType
+  core: ICore
   toolCache: IToolCache
 
   constructor(
     version: string,
-    addPath: AddPathType = core.addPath,
+    core: ICore = c,
     toolCache: IToolCache = tc) {
     this.version = version
     this.logger = LoggerFactory.create('Installer')
-    this.addPath = addPath
+    this.core = core
     this.toolCache = toolCache
   }
 
@@ -46,12 +49,23 @@ export default class Installer {
     this.logger.info(`Unzipped ${zipPath} to ${folderPath}`)
     folderPath = await this.toolCache.extractZip(zipPath, folderPath)
     // -----
-    fs.readdirSync(folderPath).forEach((file: string) => {
-      // Do whatever you want to do with the file
-      console.log(file)
-    })
+    // fs.readdirSync(folderPath).forEach((file: string) => {
+    //   // Do whatever you want to do with the file
+    //   console.log(file)
+    // })
     // -----
-    const filePath: string = path.join(folderPath, this.EXEC_FILE)
+    const files: string[] = fs.readdirSync(folderPath)
+      .filter((f: string) => f.startsWith(this.EXEC_FILE))
+    if (files.length === 0) {
+      this.core.error(
+        `There are no folders have been found with ${this.EXEC_FILE} prefix`)
+      return
+    } else if (files.length > 1) {
+      this.core.error('There are more than 1 folder have ' +
+        `been found with ${this.EXEC_FILE} prefix`)
+      return
+    }
+    const filePath: string = path.join(files[0], this.EXEC_FILE)
     this.logger.info(`Wren CLI path is ${filePath}`)
     fs.chmodSync(filePath, '777')
     this.logger.info('Access permissions changed to 777.')
@@ -59,7 +73,7 @@ export default class Installer {
     const cachedPath = await this.toolCache.cacheDir(
       folderPath, this.EXEC_FILE, this.version)
     this.logger.info(`Cached dir is ${cachedPath}`)
-    this.addPath(cachedPath)
+    this.core.addPath(cachedPath)
   }
 
   getUrl(): string {
