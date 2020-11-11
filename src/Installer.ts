@@ -38,7 +38,7 @@ export default class Installer {
     const url: string = this.getUrl()
     this.logger.info(`Downloading Wren CLI ${this.version} from ${url}`)
     const zipPath: string = await this.toolCache.downloadTool(url)
-    const uuid: string = path.basename(path.dirname(zipPath))
+    const uuid: string = path.basename(zipPath)
     this.logger.info(`Downloaded to ${zipPath}.`)
     let folderPath: string = path.dirname(zipPath)
     this.logger.info(`Unzipped ${zipPath} to ${folderPath}`)
