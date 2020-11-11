@@ -65,7 +65,8 @@ export default class Installer {
         `been found with ${this.EXEC_FILE} prefix`)
       return
     }
-    const filePath: string = path.join(folderPath, files[0], this.EXEC_FILE)
+    folderPath = path.join(folderPath, files[0])
+    const filePath: string = path.join(folderPath, this.EXEC_FILE)
     this.logger.info(`Wren CLI path is ${filePath}`)
     fs.chmodSync(filePath, '777')
     this.logger.info('Access permissions changed to 777.')
