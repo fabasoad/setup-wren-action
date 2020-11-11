@@ -37,7 +37,9 @@ export default class Installer {
   async install(): Promise<void> {
     const url: string = this.getUrl()
     this.logger.info(`Downloading Wren CLI ${this.version} from ${url}`)
-    const zipPath: string = await this.toolCache.downloadTool(url)
+    let zipPath: string = await this.toolCache.downloadTool(url)
+    fs.renameSync(zipPath, zipPath + '.zip')
+    zipPath = zipPath + '.zip'
     const uuid: string = path.basename(zipPath)
     this.logger.info(`Downloaded to ${zipPath}.`)
     let folderPath: string = path.dirname(zipPath)
