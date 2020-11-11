@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 import * as core from '@actions/core'
 import * as tc from '@actions/tool-cache'
-import extract from 'extract-zip'
 import fs from 'fs'
 import os from 'os'
 import path from 'path'
@@ -9,11 +8,13 @@ import { Logger } from 'winston'
 import LoggerFactory from './LoggerFactory'
 
 type AddPathType = (inputPath: string) => void
-type CacheDirType = (_1: string, _2: string, _3: string, _4?: string)
-  => Promise<string>
-type DownloadToolType = (url: string, dest?: string, auth?: string)
-  => Promise<string>
-type ExtractZipType = (zipPath: string, opts: extract.Options) => Promise<void>
+
+export interface ToolCache {
+  cacheDir(sourceDir: string, tool: string, version: string, arch?: string):
+    Promise<string>
+  downloadTool(url: string, dest?: string, auth?: string): Promise<string>
+  extractZip(file: string, dest?: string): Promise<string>
+}
 
 export default class Installer {
   EXEC_FILE: string = 'wren_cli'
@@ -21,36 +22,34 @@ export default class Installer {
   version: string
   logger: Logger
   addPath: AddPathType
-  cacheDir: CacheDirType
-  downloadTool: DownloadToolType
-  extractZip: ExtractZipType
+  toolCache: ToolCache
 
   constructor(
     version: string,
     addPath: AddPathType = core.addPath,
-    cacheDir: CacheDirType = tc.cacheDir,
-    downloadTool: DownloadToolType = tc.downloadTool,
-    extractZip: ExtractZipType = extract) {
+    toolCache: ToolCache = tc) {
     this.version = version
     this.logger = LoggerFactory.create('Installer')
     this.addPath = addPath
-    this.cacheDir = cacheDir
-    this.downloadTool = downloadTool
-    this.extractZip = extractZip
+    this.toolCache = toolCache
   }
 
   async install(): Promise<void> {
-    this.logger.info(`Downloading Wren CLI ${this.version}...`)
-    const zipPath: string = await this.downloadTool(this.getUrl())
+    const url: string = this.getUrl()
+    this.logger.info(`Downloading Wren CLI ${this.version} from ${url}`)
+    const zipPath: string = await this.toolCache.downloadTool(url)
     this.logger.info(`Downloaded to ${zipPath}.`)
     const folderPath: string = path.basename(path.dirname(zipPath))
-    await this.extractZip(zipPath, { dir: folderPath })
-    const filePath: string = path.join(folderPath, this.EXEC_FILE)
+    this.logger.info(`Extract ${zipPath} to ${folderPath}`)
+    const extractedPath: string =
+      await this.toolCache.extractZip(zipPath, folderPath)
+    this.logger.info(`Extracted path is ${extractedPath}`)
+    const filePath: string = path.join(extractedPath, this.EXEC_FILE)
     this.logger.info(`Unzipped to ${folderPath}.`)
     fs.chmodSync(filePath, '777')
     this.logger.info('Access permissions changed to 777.')
 
-    const cachedPath = await this.cacheDir(
+    const cachedPath = await this.toolCache.cacheDir(
       folderPath, this.EXEC_FILE, this.version)
     this.logger.info(`Cached dir is ${cachedPath}`)
     this.addPath(cachedPath)

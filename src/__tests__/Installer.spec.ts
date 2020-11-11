@@ -4,7 +4,7 @@ import itParam from 'mocha-param'
 import os from 'os'
 import path from 'path'
 import { restore, SinonStub, stub } from 'sinon'
-import Installer from '../Installer'
+import Installer, { ToolCache } from '../Installer'
 
 interface FixtureItem {
   type: string,
@@ -23,7 +23,7 @@ describe('Test Installer class', () => {
   let fsChmodSyncStub: SinonStub<[path: fs.PathLike, mode: fs.Mode], void>
   let cacheDirMocked: jest.Mock<Promise<string>>
   let downloadToolMocked: jest.Mock<Promise<string>>
-  let extractZipMocked: jest.Mock<Promise<void>>
+  let extractZipMocked: jest.Mock<Promise<string>>
 
   const buildUrl = (version: string, suffix: string): string =>
     `https://github.com/wren-lang/wren-cli/releases/download/${version}/wren_cli-${suffix}-${version}.zip`
@@ -44,24 +44,30 @@ describe('Test Installer class', () => {
       const execFile: string = 'wren_cli'
       const folderPath: string = 'x2no1z63'
       const zipPath: string = folderPath + path.sep + 'gke7d78i.zip'
-      const filePath: string = folderPath + path.sep + execFile
+      const extractedPath: string = '6l5m6ydm'
+      const filePath: string = extractedPath + path.sep + execFile
       const cachedPath: string = 'oze9ptz2'
       const version: string = 'y50pgz2b'
 
       osTypeStub.returns(supportedOS.type)
       downloadToolMocked.mockImplementation(() => Promise.resolve(zipPath))
       cacheDirMocked.mockImplementation(() => Promise.resolve(cachedPath))
+      extractZipMocked.mockImplementation(() => Promise.resolve(extractedPath))
 
+      const toolCacheMock: ToolCache = {
+        cacheDir: cacheDirMocked,
+        downloadTool: downloadToolMocked,
+        extractZip: extractZipMocked
+      }
       const installer: Installer = new Installer(
-        version, addPathMocked, cacheDirMocked,
-        downloadToolMocked, extractZipMocked)
+        version, addPathMocked, toolCacheMock)
       await installer.install()
 
       expect(downloadToolMocked.mock.calls.length).toBe(1)
       expect(downloadToolMocked.mock.calls[0][0])
         .toBe(buildUrl(version, supportedOS.suffix))
       expect(extractZipMocked.mock.calls[0][0]).toBe(zipPath)
-      expect(extractZipMocked.mock.calls[0][1]['dir']).toBe(folderPath)
+      expect(extractZipMocked.mock.calls[0][1]).toBe(folderPath)
       fsChmodSyncStub.calledOnceWith(filePath, '777')
       expect(cacheDirMocked.mock.calls.length).toBe(1)
       expect(cacheDirMocked.mock.calls[0][0]).toBe(folderPath)
