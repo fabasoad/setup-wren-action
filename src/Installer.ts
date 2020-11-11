@@ -44,10 +44,10 @@ export default class Installer {
     this.logger.info(`Unzipped ${zipPath} to ${folderPath}`)
     folderPath = await this.toolCache.extractZip(zipPath, folderPath)
     // -----
-    fs.readdirSync(path.join(folderPath, uuid)).forEach(function(file) {
+    fs.readdirSync(folderPath).forEach((file: string) => {
       // Do whatever you want to do with the file
-      console.log(file);
-    });
+      console.log(file)
+    })
     // -----
     const filePath: string = path.join(folderPath, this.EXEC_FILE)
     this.logger.info(`Wren CLI path is ${filePath}`)
