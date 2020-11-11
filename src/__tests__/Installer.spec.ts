@@ -44,15 +44,14 @@ describe('Test Installer class', () => {
       const execFile: string = 'wren_cli'
       const folderPath: string = 'x2no1z63'
       const zipPath: string = folderPath + path.sep + 'gke7d78i.zip'
-      const extractedPath: string = '6l5m6ydm'
-      const filePath: string = extractedPath + path.sep + execFile
+      const filePath: string = folderPath + path.sep + execFile
       const cachedPath: string = 'oze9ptz2'
       const version: string = 'y50pgz2b'
 
       osTypeStub.returns(supportedOS.type)
       downloadToolMocked.mockImplementation(() => Promise.resolve(zipPath))
       cacheDirMocked.mockImplementation(() => Promise.resolve(cachedPath))
-      extractZipMocked.mockImplementation(() => Promise.resolve(extractedPath))
+      extractZipMocked.mockImplementation(() => Promise.resolve(folderPath))
 
       const toolCacheMock: ToolCache = {
         cacheDir: cacheDirMocked,

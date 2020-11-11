@@ -39,13 +39,11 @@ export default class Installer {
     this.logger.info(`Downloading Wren CLI ${this.version} from ${url}`)
     const zipPath: string = await this.toolCache.downloadTool(url)
     this.logger.info(`Downloaded to ${zipPath}.`)
-    const folderPath: string = path.basename(path.dirname(zipPath))
-    this.logger.info(`Extract ${zipPath} to ${folderPath}`)
-    const extractedPath: string =
-      await this.toolCache.extractZip(zipPath, folderPath)
-    this.logger.info(`Extracted path is ${extractedPath}`)
-    const filePath: string = path.join(extractedPath, this.EXEC_FILE)
-    this.logger.info(`Unzipped to ${folderPath}.`)
+    let folderPath: string = path.dirname(zipPath)
+    this.logger.info(`Unzipped ${zipPath} to ${folderPath}`)
+    folderPath = await this.toolCache.extractZip(zipPath, folderPath)
+    const filePath: string = path.join(folderPath, this.EXEC_FILE)
+    this.logger.info(`Wren CLI path is ${filePath}`)
     fs.chmodSync(filePath, '777')
     this.logger.info('Access permissions changed to 777.')
 
