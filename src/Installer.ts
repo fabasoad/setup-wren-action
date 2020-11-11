@@ -38,21 +38,15 @@ export default class Installer {
     const url: string = this.getUrl()
     this.logger.info(`Downloading Wren CLI ${this.version} from ${url}`)
     const zipPath: string = await this.toolCache.downloadTool(url)
+    const uuid: string = path.basename(path.dirname(zipPath))
     this.logger.info(`Downloaded to ${zipPath}.`)
     let folderPath: string = path.dirname(zipPath)
     this.logger.info(`Unzipped ${zipPath} to ${folderPath}`)
     folderPath = await this.toolCache.extractZip(zipPath, folderPath)
     // -----
-    fs.readdir(folderPath, (err, files) => {
-      // handling error
-      if (err) {
-        return console.log('Unable to scan directory: ' + err);
-      }
-      // listing all files using forEach
-      files.forEach(function(file) {
-        // Do whatever you want to do with the file
-        console.log(file);
-      });
+    fs.readdirSync(path.join(folderPath, uuid)).forEach(function(file) {
+      // Do whatever you want to do with the file
+      console.log(file);
     });
     // -----
     const filePath: string = path.join(folderPath, this.EXEC_FILE)
