@@ -47,12 +47,6 @@ export default class Installer {
     let folderPath: string = path.dirname(zipPath)
     this.logger.info(`Unzipped ${zipPath} to ${folderPath}`)
     folderPath = await this.toolCache.extractZip(zipPath, folderPath)
-    // -----
-    // fs.readdirSync(folderPath).forEach((file: string) => {
-    //   // Do whatever you want to do with the file
-    //   console.log(file)
-    // })
-    // -----
     const files: string[] = fs.readdirSync(folderPath)
       .filter((f: string) => f.startsWith(this.EXEC_FILE))
     if (files.length === 0) {
@@ -74,6 +68,12 @@ export default class Installer {
       folderPath, this.EXEC_FILE, this.version)
     this.logger.info(`Cached dir is ${cachedPath}`)
     this.core.addPath(cachedPath)
+    // -----
+    fs.readdirSync(cachedPath).forEach((file: string) => {
+      // Do whatever you want to do with the file
+      console.log(file)
+    })
+    // -----
   }
 
   getUrl(): string {
