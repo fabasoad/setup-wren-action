@@ -43,10 +43,13 @@ export default class Installer {
     let zipPath: string = await this.toolCache.downloadTool(url)
     fs.renameSync(zipPath, zipPath + '.zip')
     zipPath = zipPath + '.zip'
-    this.logger.info(`Downloaded to ${zipPath}.`)
+    this.logger.info(`Downloaded to ${zipPath}`)
     let folderPath: string = path.dirname(zipPath)
     this.logger.info(`Unzipped ${zipPath} to ${folderPath}`)
     folderPath = await this.toolCache.extractZip(zipPath, folderPath)
+    // -----
+    this.print(folderPath)
+    // -----
     const files: string[] = fs.readdirSync(folderPath)
       .filter((f: string) => f.startsWith(this.EXEC_FILE))
     if (files.length === 0) {
@@ -59,6 +62,9 @@ export default class Installer {
       return
     }
     folderPath = path.join(folderPath, files[0])
+    // -----
+    this.print(folderPath)
+    // -----
     const filePath: string = path.join(folderPath, this.EXEC_FILE)
     this.logger.info(`Wren CLI path is ${filePath}`)
     fs.chmodSync(filePath, '777')
@@ -69,11 +75,16 @@ export default class Installer {
     this.logger.info(`Cached dir is ${cachedPath}`)
     this.core.addPath(cachedPath)
     // -----
-    fs.readdirSync(cachedPath).forEach((file: string) => {
+    this.print(cachedPath)
+    // -----
+  }
+
+  print(folder: string) {
+    this.logger.info(`PRINT ${folder}:`)
+    fs.readdirSync(folder).forEach((file: string) => {
       // Do whatever you want to do with the file
       console.log(file)
     })
-    // -----
   }
 
   getUrl(): string {
