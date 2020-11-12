@@ -43,7 +43,6 @@ export default class Installer {
     let zipPath: string = await this.toolCache.downloadTool(url)
     fs.renameSync(zipPath, zipPath + '.zip')
     zipPath = zipPath + '.zip'
-    const uuid: string = path.basename(zipPath)
     this.logger.info(`Downloaded to ${zipPath}.`)
     let folderPath: string = path.dirname(zipPath)
     this.logger.info(`Unzipped ${zipPath} to ${folderPath}`)
