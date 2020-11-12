@@ -61,7 +61,7 @@ describe('Test Installer class', () => {
   //     const version: string = 'y50pgz2b'
 
   //     osTypeStub.returns(supportedOS.type)
-  //    downloadToolMocked.mockImplementation(() => Promise.resolve(zipPathOld))
+  // downloadToolMocked.mockImplementation(() => Promise.resolve(zipPathOld))
   //     cacheDirMocked.mockImplementation(() => Promise.resolve(cachedPath))
   //     extractZipMocked.mockImplementation(() => Promise.resolve(folderPath))
   //     fsReaddirSyncStub.returns([execFolderPath, 'ioh3z85r'])
