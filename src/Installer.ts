@@ -74,6 +74,7 @@ export default class Installer {
       folderPath, this.EXEC_FILE, this.version)
     this.logger.info(`Cached dir is ${cachedPath}`)
     this.core.addPath(cachedPath)
+    this._print(cachedPath)
   }
 
   async install(): Promise<void> {
