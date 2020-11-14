@@ -52,6 +52,7 @@ export default class Installer {
     let folderPath: string = path.dirname(zipPath)
     folderPath = await this.toolCache.extractZip(zipPath, folderPath)
     this.logger.info(`Unzipped ${zipPath} to ${folderPath}`)
+    this._print(folderPath)
     return folderPath
   }
 
@@ -85,7 +86,7 @@ export default class Installer {
     try {
       execFilePath = this._findExecFile(folderPath)
     } catch (e) {
-      this.core.error((e as Error).message)
+      this.core.error((<Error>e).message)
       return
     }
     fs.chmodSync(execFilePath, '777')
