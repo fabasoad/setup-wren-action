@@ -58,14 +58,15 @@ export default class Installer {
   }
 
   _findExecFile(folderPath: string): string {
-    const files: string[] = glob.sync(
-      `${folderPath}/**/${this._getCliFullName()}/${this.EXEC_FILE}*`)
+    const pattern: string =
+      `${folderPath}/**/${this._getCliFullName()}/${this.EXEC_FILE}*`
+    const files: string[] = glob.sync(pattern)
     if (files.length === 0) {
-      throw new Error(
-        `There are no folders have been found with ${this.EXEC_FILE} prefix`)
+      throw new Error(`Execution file has not been found under ${folderPath}` +
+        ` folder using ${pattern} pattern`)
     } else if (files.length > 1) {
-      throw new Error('There are more than 1 folder have been found with ' +
-        `${this.EXEC_FILE} prefix: ${files}`)
+      throw new Error('There are more than 1 execution file has been found ' +
+        `under ${folderPath} folder using ${pattern} pattern: ${files}`)
     }
     this.logger.info(`Wren CLI path is ${files[0]}`)
     return files[0]

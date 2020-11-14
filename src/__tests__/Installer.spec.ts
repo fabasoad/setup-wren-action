@@ -105,7 +105,7 @@ describe('Test Installer class', () => {
       const version: string = 'y50pgz2b'
       const installer: Installer = new Installer(version)
 
-      const url: string = installer.getUrl()
+      const url: string = installer._getUrl()
       assert.equal(buildUrl(version, supportedOS.suffix), url)
     })
 
