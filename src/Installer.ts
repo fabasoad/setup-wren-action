@@ -58,7 +58,7 @@ export default class Installer {
 
   _findExecFile(folderPath: string): string {
     const pattern: string =
-      `${folderPath}${path.sep}**${path.sep}${this.CLI_NAME}*`
+      `${path.dirname(folderPath)}${path.sep}**${path.sep}${this.CLI_NAME}*`
     const files: string[] = glob.sync(pattern)
       .filter((f: string) => f.endsWith(this._getCliExecFileName()))
     if (files.length === 0) {
