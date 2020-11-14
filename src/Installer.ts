@@ -50,24 +50,28 @@ export default class Installer {
 
   async _unzip(zipPath: string): Promise<string> {
     let folderPath: string = path.dirname(zipPath)
-    folderPath = await this.toolCache.extractZip(
-      zipPath, path.join(folderPath, this._getCliFullName()))
+    folderPath = await this.toolCache.extractZip(zipPath, folderPath)
     this.logger.info(`Unzipped ${zipPath} to ${folderPath}`)
     this._print(folderPath)
     return folderPath
   }
 
-  _findExecFile(folderPath: string): string {
-    const basePath: string = path.dirname(path.dirname(folderPath))
-    const pattern: string =
-      `${basePath}/**/${this._getCliFullName()}/${this.EXEC_FILE}*`
+  _findExecFile(
+    folderPath: string,
+    pattern: string =
+    `${folderPath}/**/${this._generateCliFullName()}/${this.EXEC_FILE}*`,
+    retry: boolean = true): string {
     const files: string[] = glob.sync(pattern)
     if (files.length === 0) {
-      throw new Error(`Execution file has not been found under ${basePath}` +
-        ` folder using ${pattern} pattern`)
+      if (!retry) {
+        throw new Error('Execution file has not been found under ' +
+          `${folderPath} folder using ${pattern} pattern`)
+      }
+      return this._findExecFile(
+        folderPath, `${folderPath}/**/${this.EXEC_FILE}*`, false)
     } else if (files.length > 1) {
       throw new Error('There are more than 1 execution file has been found ' +
-        `under ${basePath} folder using ${pattern} pattern: ${files}`)
+        `under ${folderPath} folder using ${pattern} pattern: ${files}`)
     }
     this.logger.info(`Wren CLI path is ${files[0]}`)
     return files[0]
@@ -117,10 +121,11 @@ export default class Installer {
   }
 
   _getUrl(): string {
-    return `https://github.com/wren-lang/wren-cli/releases/download/${this.version}/${this._getCliFullName()}.zip`
+    return 'https://github.com/wren-lang/wren-cli/releases/download/' +
+      `${this.version}/${this._generateCliFullName()}.zip`
   }
 
-  _getCliFullName(): string {
+  _generateCliFullName(): string {
     return `${this.EXEC_FILE}-${this._getOS()}-${this.version}`
   }
 }
