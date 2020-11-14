@@ -50,16 +50,16 @@ export default class Installer {
 
   async _unzip(zipPath: string): Promise<string> {
     let folderPath: string = path.dirname(zipPath)
-    folderPath = await this.toolCache.extractZip(zipPath, folderPath)
+    folderPath = await this.toolCache.extractZip(
+      zipPath, path.join(folderPath, this._randomString()))
     this.logger.info(`Unzipped ${zipPath} to ${folderPath}`)
     this._print(folderPath)
     return folderPath
   }
 
   _findExecFile(folderPath: string): string {
-    const basePath: string = path.dirname(folderPath)
     const files: string[] = glob.sync(
-      `${basePath}/**/${this.EXEC_FILE}-*-${this.version}/${this.EXEC_FILE}*`)
+      `${folderPath}/**/${this.EXEC_FILE}-*-${this.version}/${this.EXEC_FILE}*`)
     if (files.length === 0) {
       throw new Error(
         `There are no folders have been found with ${this.EXEC_FILE} prefix`)
@@ -101,6 +101,10 @@ export default class Installer {
       // Do whatever you want to do with the file
       console.log(file)
     })
+  }
+
+  _randomString(): string {
+    return Math.random().toString(36).substr(2, 10)
   }
 
   getUrl(): string {
