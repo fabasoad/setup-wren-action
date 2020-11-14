@@ -61,8 +61,8 @@ export default class Installer {
       throw new Error(
         `There are no folders have been found with ${this.EXEC_FILE} prefix`)
     } else if (files.length > 1) {
-      throw new Error('There are more than 1 folder have ' +
-        `been found with ${this.EXEC_FILE} prefix`)
+      throw new Error('There are more than 1 folder have been found with ' +
+        `${this.EXEC_FILE} prefix: ${files}`)
     }
     this.logger.info(`Wren CLI path is ${files[0]}`)
     return files[0]
