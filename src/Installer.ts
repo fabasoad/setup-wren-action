@@ -58,7 +58,7 @@ export default class Installer {
 
   _findExecFile(folderPath: string): string {
     const pattern: string =
-      `${path.dirname(folderPath)}${path.sep}**${path.sep}${this.CLI_NAME}*`
+      `${folderPath}${path.sep}**${path.sep}${this.CLI_NAME}*`
     const files: string[] = glob.sync(pattern)
       .filter((f: string) => f.endsWith(this._getCliExecFileName()))
     if (files.length === 0) {
@@ -127,7 +127,7 @@ export default class Installer {
   _getCliExecFileName(): string {
     console.log(`Current OS: ${os.type()}`)
     switch (os.type()) {
-    case 'Windows':
+    case 'Windows_NT':
       return `${this.CLI_NAME}-${this.version}.exe`
     default:
       return this.CLI_NAME
