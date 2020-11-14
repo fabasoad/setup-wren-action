@@ -52,7 +52,6 @@ export default class Installer {
     let folderPath: string = path.dirname(zipPath)
     folderPath = await this.toolCache.extractZip(zipPath, folderPath)
     this.logger.info(`Unzipped ${zipPath} to ${folderPath}`)
-    this._print(folderPath)
     return folderPath
   }
 
@@ -77,7 +76,6 @@ export default class Installer {
       folderPath, this._getCliExecFileName(), this.version)
     this.logger.info(`Cached dir is ${cachedPath}`)
     this.core.addPath(cachedPath)
-    this._print(cachedPath)
   }
 
   async install(): Promise<void> {
@@ -94,14 +92,6 @@ export default class Installer {
     fs.chmodSync(execFilePath, '777')
     this.logger.info('Access permissions changed to 777.')
     this._cache(path.dirname(execFilePath))
-  }
-
-  _print(folder: string) {
-    this.logger.info(`PRINT ${folder}:`)
-    fs.readdirSync(folder).forEach((file: string) => {
-      // Do whatever you want to do with the file
-      console.log(file)
-    })
   }
 
   _getOS(): string {
@@ -125,7 +115,6 @@ export default class Installer {
   }
 
   _getCliExecFileName(): string {
-    console.log(`Current OS: ${os.type()}`)
     switch (os.type()) {
     case 'Windows_NT':
       return `${this.CLI_NAME}-${this.version}.exe`
