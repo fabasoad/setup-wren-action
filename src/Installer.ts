@@ -2,6 +2,7 @@
 import * as c from '@actions/core'
 import * as tc from '@actions/tool-cache'
 import fs from 'fs'
+import glob from 'glob'
 import os from 'os'
 import path from 'path'
 import { Logger } from 'winston'
@@ -37,49 +38,60 @@ export default class Installer {
     this.toolCache = toolCache
   }
 
-  async install(): Promise<void> {
-    const url: string = this.getUrl()
+  async _download(url: string): Promise<string> {
     this.logger.info(`Downloading Wren CLI ${this.version} from ${url}`)
-    let zipPath: string = await this.toolCache.downloadTool(url)
-    fs.renameSync(zipPath, zipPath + '.zip')
-    zipPath = zipPath + '.zip'
-    this.logger.info(`Downloaded to ${zipPath}`)
-    let folderPath: string = path.dirname(zipPath)
-    this.logger.info(`Unzipped ${zipPath} to ${folderPath}`)
-    folderPath = await this.toolCache.extractZip(zipPath, folderPath)
-    // -----
-    this.print(folderPath)
-    // -----
-    const files: string[] = fs.readdirSync(folderPath)
-      .filter((f: string) => f.startsWith(this.EXEC_FILE))
-    if (files.length === 0) {
-      this.core.error(
-        `There are no folders have been found with ${this.EXEC_FILE} prefix`)
-      return
-    } else if (files.length > 1) {
-      this.core.error('There are more than 1 folder have ' +
-        `been found with ${this.EXEC_FILE} prefix`)
-      return
-    }
-    folderPath = path.join(folderPath, files[0])
-    // -----
-    this.print(folderPath)
-    // -----
-    const filePath: string = path.join(folderPath, this.EXEC_FILE)
-    this.logger.info(`Wren CLI path is ${filePath}`)
-    fs.chmodSync(filePath, '777')
-    this.logger.info('Access permissions changed to 777.')
+    const zipPathOld: string = await this.toolCache.downloadTool(url)
+    this.logger.info(`Downloaded to ${zipPathOld}`)
+    const zipPathNew: string = zipPathOld + '.zip'
+    fs.renameSync(zipPathOld, zipPathNew)
+    this.logger.info(`Renamed to ${zipPathNew}`)
+    return zipPathNew
+  }
 
+  async _unzip(zipPath: string): Promise<string> {
+    let folderPath: string = path.dirname(zipPath)
+    folderPath = await this.toolCache.extractZip(zipPath, folderPath)
+    this.logger.info(`Unzipped ${zipPath} to ${folderPath}`)
+    return folderPath
+  }
+
+  _findExecFile(folderPath: string): string {
+    const files: string[] = glob.sync(`${folderPath}/**/${this.EXEC_FILE}*`)
+    if (files.length === 0) {
+      throw new Error(
+        `There are no folders have been found with ${this.EXEC_FILE} prefix`)
+    } else if (files.length > 1) {
+      throw new Error('There are more than 1 folder have ' +
+        `been found with ${this.EXEC_FILE} prefix`)
+    }
+    this.logger.info(`Wren CLI path is ${files[0]}`)
+    return files[0]
+  }
+
+  async _cache(folderPath: string): Promise<void> {
     const cachedPath = await this.toolCache.cacheDir(
       folderPath, this.EXEC_FILE, this.version)
     this.logger.info(`Cached dir is ${cachedPath}`)
     this.core.addPath(cachedPath)
-    // -----
-    this.print(cachedPath)
-    // -----
   }
 
-  print(folder: string) {
+  async install(): Promise<void> {
+    const url: string = this.getUrl()
+    const zipPath: string = await this._download(url)
+    const folderPath: string = await this._unzip(zipPath)
+    let execFilePath: string
+    try {
+      execFilePath = this._findExecFile(folderPath)
+    } catch (e) {
+      this.core.error((e as Error).message)
+      return
+    }
+    fs.chmodSync(execFilePath, '777')
+    this.logger.info('Access permissions changed to 777.')
+    this._cache(folderPath)
+  }
+
+  _print(folder: string) {
     this.logger.info(`PRINT ${folder}:`)
     fs.readdirSync(folder).forEach((file: string) => {
       // Do whatever you want to do with the file
