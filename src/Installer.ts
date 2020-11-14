@@ -56,19 +56,13 @@ export default class Installer {
     return folderPath
   }
 
-  _findExecFile(
-    folderPath: string,
-    pattern: string =
-    `${folderPath}/**/${this._generateCliFullName()}/${this.CLI_NAME}*`,
-    retry: boolean = true): string {
+  _findExecFile(folderPath: string): string {
+    const pattern: string = `${folderPath}/**/${this.CLI_NAME}*`
     const files: string[] = glob.sync(pattern)
+      .filter((f: string) => !f.endsWith(this._getCliExecFileName()))
     if (files.length === 0) {
-      if (!retry) {
-        throw new Error('Execution file has not been found under ' +
-          `${folderPath} folder using ${pattern} pattern`)
-      }
-      return this._findExecFile(
-        folderPath, `${folderPath}/**/${this.CLI_NAME}*`, false)
+      throw new Error('Execution file has not been found under ' +
+        `${folderPath} folder using ${pattern} pattern`)
     } else if (files.length > 1) {
       throw new Error('There are more than 1 execution file has been found ' +
         `under ${folderPath} folder using ${pattern} pattern: ${files}`)
