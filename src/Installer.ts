@@ -51,7 +51,7 @@ export default class Installer {
   async _unzip(zipPath: string): Promise<string> {
     let folderPath: string = path.dirname(zipPath)
     folderPath = await this.toolCache.extractZip(
-      zipPath, path.join(folderPath, this._randomString()))
+      zipPath, path.join(folderPath, this._getCliFullName()))
     this.logger.info(`Unzipped ${zipPath} to ${folderPath}`)
     this._print(folderPath)
     return folderPath
@@ -59,7 +59,7 @@ export default class Installer {
 
   _findExecFile(folderPath: string): string {
     const files: string[] = glob.sync(
-      `${folderPath}/**/${this.EXEC_FILE}-*-${this.version}/${this.EXEC_FILE}*`)
+      `${folderPath}/**/${this._getCliFullName()}/${this.EXEC_FILE}*`)
     if (files.length === 0) {
       throw new Error(
         `There are no folders have been found with ${this.EXEC_FILE} prefix`)
@@ -80,7 +80,7 @@ export default class Installer {
   }
 
   async install(): Promise<void> {
-    const url: string = this.getUrl()
+    const url: string = this._getUrl()
     const zipPath: string = await this._download(url)
     const folderPath: string = await this._unzip(zipPath)
     let execFilePath: string
@@ -103,22 +103,22 @@ export default class Installer {
     })
   }
 
-  _randomString(): string {
-    return Math.random().toString(36).substr(2, 10)
-  }
-
-  getUrl(): string {
-    let suffix: string
+  _getOS(): string {
     switch (os.type()) {
     case 'Darwin':
-      suffix = 'mac'
-      break
+      return 'mac'
     case 'Linux':
-      suffix = 'linux'
-      break
+      return 'linux'
     default:
-      suffix = 'windows'
+      return 'windows'
     }
-    return `https://github.com/wren-lang/wren-cli/releases/download/${this.version}/wren_cli-${suffix}-${this.version}.zip`
+  }
+
+  _getUrl(): string {
+    return `https://github.com/wren-lang/wren-cli/releases/download/${this.version}/${this._getCliFullName()}.zip`
+  }
+
+  _getCliFullName(): string {
+    return `${this.EXEC_FILE}-${this._getOS()}-${this.version}`
   }
 }
