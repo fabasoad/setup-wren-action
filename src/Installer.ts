@@ -57,8 +57,9 @@ export default class Installer {
   }
 
   _findExecFile(folderPath: string): string {
+    const basePath: string = path.dirname(folderPath)
     const files: string[] = glob.sync(
-      `${folderPath}/**/${this.EXEC_FILE}-*-${this.version}/${this.EXEC_FILE}*`)
+      `${basePath}/**/${this.EXEC_FILE}-*-${this.version}/${this.EXEC_FILE}*`)
     if (files.length === 0) {
       throw new Error(
         `There are no folders have been found with ${this.EXEC_FILE} prefix`)
