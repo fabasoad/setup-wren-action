@@ -90,7 +90,7 @@ export default class Installer {
     }
     fs.chmodSync(execFilePath, '777')
     this.logger.info('Access permissions changed to 777.')
-    this._cache(folderPath)
+    this._cache(path.dirname(execFilePath))
   }
 
   _print(folder: string) {
