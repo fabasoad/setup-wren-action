@@ -34,7 +34,8 @@ export default class Cache implements ICache {
 
   async cache(execFilePath: string): Promise<void> {
     fs.chmodSync(execFilePath, '777')
-    this.log.info('Access permissions changed to 777.')
+    this.log.info(
+      `Access permissions of ${execFilePath} files was changed to 777.`)
     const folderPath: string = path.dirname(execFilePath)
     const cachedPath = await this.cd(
       folderPath, this.getCliExecFileName(), this.version)

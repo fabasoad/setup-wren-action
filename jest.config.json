@@ -11,9 +11,9 @@
   "coverageThreshold": {
     "global": {
       "branches": 100,
-      "functions": 100,
-      "lines": 97.22,
-      "statements": 97.22
+      "functions": 95.65,
+      "lines": 96.4,
+      "statements": 96.4
     }
   },
   "moduleFileExtensions": [
