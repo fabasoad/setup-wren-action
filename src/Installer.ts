@@ -59,7 +59,7 @@ export default class Installer {
   _findExecFile(folderPath: string): string {
     const pattern: string = `${folderPath}/**/${this.CLI_NAME}*`
     const files: string[] = glob.sync(pattern)
-      .filter((f: string) => !f.endsWith(this._getCliExecFileName()))
+      .filter((f: string) => f.endsWith(this._getCliExecFileName()))
     if (files.length === 0) {
       throw new Error('Execution file has not been found under ' +
         `${folderPath} folder using ${pattern} pattern`)
@@ -125,11 +125,10 @@ export default class Installer {
 
   _getCliExecFileName(): string {
     switch (os.type()) {
-    case 'Darwin':
-    case 'Linux':
-      return this.CLI_NAME
-    default:
+    case 'Windows':
       return `${this.CLI_NAME}-${this.version}.exe`
+    default:
+      return this.CLI_NAME
     }
   }
 }
