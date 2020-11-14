@@ -125,6 +125,7 @@ export default class Installer {
   }
 
   _getCliExecFileName(): string {
+    console.log(`Current OS: ${os.type()}`)
     switch (os.type()) {
     case 'Windows':
       return `${this.CLI_NAME}-${this.version}.exe`
