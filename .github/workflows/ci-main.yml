@@ -53,5 +53,9 @@ jobs:
       - uses: ./
         with:
           version: ${{ matrix.version }}
-      - name: Run script
+      - name: Run script (Linux, MacOS)
+        if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
         run: wren_cli ./hello-world.wren
+      - name: Run script (Windows)
+        if: matrix.os == 'windows-latest'
+        run: wren_cli-${{ matrix.version }}.exe ./hello-world.wren

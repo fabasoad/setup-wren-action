@@ -21,7 +21,7 @@ export interface IToolCache {
 }
 
 export default class Installer {
-  EXEC_FILE: string = 'wren_cli'
+  CLI_NAME: string = 'wren_cli'
 
   version: string
   logger: Logger
@@ -59,7 +59,7 @@ export default class Installer {
   _findExecFile(
     folderPath: string,
     pattern: string =
-    `${folderPath}/**/${this._generateCliFullName()}/${this.EXEC_FILE}*`,
+    `${folderPath}/**/${this._generateCliFullName()}/${this.CLI_NAME}*`,
     retry: boolean = true): string {
     const files: string[] = glob.sync(pattern)
     if (files.length === 0) {
@@ -68,7 +68,7 @@ export default class Installer {
           `${folderPath} folder using ${pattern} pattern`)
       }
       return this._findExecFile(
-        folderPath, `${folderPath}/**/${this.EXEC_FILE}*`, false)
+        folderPath, `${folderPath}/**/${this.CLI_NAME}*`, false)
     } else if (files.length > 1) {
       throw new Error('There are more than 1 execution file has been found ' +
         `under ${folderPath} folder using ${pattern} pattern: ${files}`)
@@ -79,7 +79,7 @@ export default class Installer {
 
   async _cache(folderPath: string): Promise<void> {
     const cachedPath = await this.toolCache.cacheDir(
-      folderPath, this.EXEC_FILE, this.version)
+      folderPath, this._getCliExecFileName(), this.version)
     this.logger.info(`Cached dir is ${cachedPath}`)
     this.core.addPath(cachedPath)
     this._print(cachedPath)
@@ -126,6 +126,16 @@ export default class Installer {
   }
 
   _generateCliFullName(): string {
-    return `${this.EXEC_FILE}-${this._getOS()}-${this.version}`
+    return `${this.CLI_NAME}-${this._getOS()}-${this.version}`
+  }
+
+  _getCliExecFileName(): string {
+    switch (os.type()) {
+    case 'Darwin':
+    case 'Linux':
+      return this.CLI_NAME
+    default:
+      return `${this.CLI_NAME}-${this.version}.exe`
+    }
   }
 }
