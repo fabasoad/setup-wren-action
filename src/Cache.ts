@@ -40,5 +40,12 @@ export default class Cache implements ICache {
       folderPath, this.getCliExecFileName(), this.version)
     this.log.info(`Cached dir is ${cachedPath}`)
     this.ap(cachedPath)
+    this._print(cachedPath)
+  }
+
+  private _print(folder: string) {
+    fs.readdirSync(folder).forEach((f: string) => {
+      console.log(f)
+    })
   }
 }

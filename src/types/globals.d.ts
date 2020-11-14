@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 interface IInstaller {
   install(): Promise<void>
 }
