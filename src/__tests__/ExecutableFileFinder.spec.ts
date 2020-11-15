@@ -30,7 +30,7 @@ describe('ExecutableFileFinder', () => {
     const files: string[] = [`1clx8w43${SUFFIX}`, '1clx8w43']
     globSyncStub.returns(files)
     const finder: ExecutableFileFinder = new ExecutableFileFinder('1uu02vbj', {
-      build: (): string => SUFFIX
+      getExeFileName: (): string => SUFFIX
     })
     const actual: string = finder.find(folderPath)
     globSyncStub.calledOnceWithExactly(
@@ -43,7 +43,7 @@ describe('ExecutableFileFinder', () => {
     const files: string[] = [`1clx8w43${SUFFIX}`, `gt11c1zr${SUFFIX}`]
     globSyncStub.returns(files)
     const finder: ExecutableFileFinder = new ExecutableFileFinder('1uu02vbj', {
-      build: (): string => item.suffix
+      getExeFileName: (): string => item.suffix
     })
     try {
       finder.find(folderPath)

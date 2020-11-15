@@ -1,18 +1,18 @@
 import glob from 'glob'
 import path from 'path'
 import { Logger } from 'winston'
-import CliFileNameBuilder from './CliFileNameBuilder'
+import CliExeNameProvider from './CliExeNameProvider'
 import { CLI_NAME } from './consts'
 import LoggerFactory from './LoggerFactory'
 
 export default class ExecutableFileFinder implements IExecutableFileFinder {
   private log: Logger
-  private builder: ICliFileNameBuilder
+  private provider: ICliExeNameProvider
 
   constructor(
     version: string,
-    builder: ICliFileNameBuilder = new CliFileNameBuilder(version)) {
-    this.builder = builder
+    provider: ICliExeNameProvider = new CliExeNameProvider(version)) {
+    this.provider = provider
     this.log = LoggerFactory.create('ExecutableFileFinder')
   }
 
@@ -20,7 +20,7 @@ export default class ExecutableFileFinder implements IExecutableFileFinder {
     const pattern: string =
       `${folderPath}${path.sep}**${path.sep}${CLI_NAME}*`
     const files: string[] = glob.sync(pattern)
-      .filter((f: string) => f.endsWith(this.builder.build()))
+      .filter((f: string) => f.endsWith(this.provider.getExeFileName()))
     if (files.length === 0) {
       throw new Error('Execution file has not been found under ' +
         `${folderPath} folder using ${pattern} pattern`)

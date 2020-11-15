@@ -26,3 +26,7 @@ interface IExecutableFileFinder {
 interface ICache {
   cache(folderPath: string): Promise<void>
 }
+
+interface ICliExeNameProvider {
+  getExeFileName(): string
+}
