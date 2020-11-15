@@ -12,6 +12,12 @@ This action sets up a [Wren CLI](https://wren.io/cli/).
 
 ## Example usage
 
+Let's try to run `hello-world.wren` file with the following content:
+
+```java
+System.print("Hello World!")
+```
+
 ### Workflow configuration
 
 ```yaml
@@ -24,12 +30,17 @@ jobs:
     name: Setup
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@main
       - uses: fabasoad/setup-wren-action@main
         with:
           version: 0.3.0
       - name: Run script
-        run: {EXAMPLE}
+        run: wren_cli ./hello-world.wren
 ```
 
 ### Result
+
+```shell
+Run wren_cli ./hello-world.wren
+Hello World!
+```

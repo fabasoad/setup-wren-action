@@ -8,20 +8,25 @@ on:
 
 jobs:
   unit_tests:
-    name: Unit Tests
+    name: Unit tests
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.4
         with:
           ref: ${{ github.ref }}
-      - uses: actions/setup-node@v2.1.1
+      - name: Install node
+        uses: actions/setup-node@v2.1.1
         with:
           node-version: '14'
-      - run: yarn install
-      - run: yarn run lint
-      - run: yarn run security:auth ${{ secrets.SNYK_API_TOKEN }}
-      - run: yarn run test
+      - name: Compile
+        run: yarn install
+      - name: Lint
+        run: yarn run lint
+      - name: Snyk authenticate
+        run: yarn run security:auth ${{ secrets.SNYK_API_TOKEN }}
+      - name: Unit tests
+        run: yarn run test
   functional_tests:
     name: Functional tests
     timeout-minutes: 5
@@ -32,8 +37,23 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2.3.4
-      - uses: fabasoad/setup-wren-action@v1.0.0
+        with:
+          ref: ${{ github.ref }}
+      - name: Install node
+        uses: actions/setup-node@v2.1.1
+        with:
+          node-version: '14'
+      - name: Compile
+        run: yarn install
+      - name: Build
+        run: yarn run build
+      - name: Install wren
+        uses: fabasoad/setup-wren-action@1.0.0
         with:
           version: ${{ matrix.version }}
-      - name: Run script
+      - name: Run script (Linux, MacOS)
+        if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
         run: wren_cli ./hello-world.wren
+      - name: Run script (Windows)
+        if: matrix.os == 'windows-latest'
+        run: wren_cli-${{ matrix.version }}.exe ./hello-world.wren
