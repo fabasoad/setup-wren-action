@@ -3,8 +3,6 @@ name: CI (latest)
 
 on:
   push:
-    branches:
-      - main
     tags:
       - 'v*.*.*'
 
@@ -50,7 +48,7 @@ jobs:
       - name: Build
         run: yarn run build
       - name: Install wren
-        uses: fabasoad/setup-wren-action@v1.0.0
+        uses: fabasoad/setup-wren-action@${GITHUB_REF#refs/tags/}
         with:
           version: ${{ matrix.version }}
       - name: Run script (Linux, MacOS)
