@@ -57,7 +57,7 @@
   "snyk": true,
   "husky": {
     "hooks": {
-      "pre-commit": "git-branch-is -r \"^((?!main).)*$\" && npm run build && git add .",
+      "pre-commit": "git-branch-is -r \"^((?!main).)*$\" && npm run build && git add dist/index.js",
       "pre-push": "npm run lint && npm test"
     }
   }
