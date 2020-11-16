@@ -1,7 +1,7 @@
 ---
 name: 'Setup Wren CLI'
 author: Yevhen Fabizhevskyi
-description: 'This action sets up a Wren scripting language.'
+description: 'This action sets up a wren CLI to run wren scripts.'
 branding:
   icon: file-text
   color: white
