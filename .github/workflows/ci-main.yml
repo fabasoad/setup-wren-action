@@ -11,6 +11,9 @@ on:
     branches:
       - main
 
+env:
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+
 jobs:
   unit_tests:
     name: Unit tests
