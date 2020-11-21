@@ -7,9 +7,6 @@ on:
       - main
       - 'bugfix/**'
       - 'feature/**'
-  pull_request:
-    branches:
-      - main
 
 env:
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true
