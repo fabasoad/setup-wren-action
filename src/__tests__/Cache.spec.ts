@@ -6,9 +6,10 @@ import { restore, SinonStub, stub } from 'sinon'
 import Cache from '../Cache'
 
 describe('Cache', () => {
-  let addPathStub: SinonStub
-  let cacheDirStub: SinonStub
-  let chmodSyncStub: SinonStub
+  let addPathStub: SinonStub<[inputPath: string], void>
+  let cacheDirStub: SinonStub<[sourceDir: string,
+    tool: string, version: string, arch?: string], Promise<string>>
+  let chmodSyncStub: SinonStub<[path: fs.PathLike, mode: fs.Mode], void>
 
   beforeEach(() => {
     addPathStub = stub(core, 'addPath')
@@ -23,7 +24,7 @@ describe('Cache', () => {
     const folderPath: string = '1ef84ehe'
     const execFilePath: string = path.join(folderPath, 'm8x9p1sw')
     const cachedPath: string = '1r4wn1iw';
-    cacheDirStub.returns(cachedPath)
+    cacheDirStub.returns(Promise.resolve(cachedPath))
     const cache: Cache = new Cache(version, {
       getExeFileName: getExeFileNameMock
     })
