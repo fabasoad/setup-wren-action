@@ -1,43 +1,39 @@
+import * as core from '@actions/core'
+import * as tc from '@actions/tool-cache'
 import fs from 'fs'
 import path from 'path'
 import { restore, SinonStub, stub } from 'sinon'
 import Cache from '../Cache'
 
 describe('Cache', () => {
-  const expectedVersion: string = 'ey1r6c00'
-
-  let fsChmodSyncStub: SinonStub<[path: fs.PathLike, mode: fs.Mode], void>
+  let addPathStub: SinonStub
+  let cacheDirStub: SinonStub
+  let chmodSyncStub: SinonStub
 
   beforeEach(() => {
-    fsChmodSyncStub = stub(fs, 'chmodSync')
+    addPathStub = stub(core, 'addPath')
+    cacheDirStub = stub(tc, 'cacheDir')
+    chmodSyncStub = stub(fs, 'chmodSync')
   })
 
-  it('should cache successfully (${value.os})', async () => {
-    const exeFileName: string = 'cmh2l9b7'
+  it('should cache successfully', async () => {
+    const version: string = 'ey1r6c00'
+    const exeFileName: string = 'O7DF0gox'
+    const getExeFileNameMock: jest.Mock<string, []> = jest.fn(() => exeFileName)
     const folderPath: string = '1ef84ehe'
     const execFilePath: string = path.join(folderPath, 'm8x9p1sw')
-    const cachedPath: string = '1r4wn1iw'
-
-    const apMocked: jest.Mock<void, [inputPath: string]> = jest.fn()
-    const cdMocked: jest.Mock<
-      Promise<string>,
-      [sourceDir: string, tool: string, version: string, arch?: string]> =
-      jest.fn().mockImplementation(
-        // eslint-disable-next-line no-unused-vars
-        (sourceDir: string, tool: string, version: string, arch?: string) =>
-          cachedPath)
-    const cache: Cache = new Cache(expectedVersion, apMocked, cdMocked, {
-      getExeFileName: (): string => exeFileName
+    const cachedPath: string = '1r4wn1iw';
+    cacheDirStub.returns(cachedPath)
+    const cache: Cache = new Cache(version, {
+      getExeFileName: getExeFileNameMock
     })
     await cache.cache(execFilePath)
 
-    fsChmodSyncStub.calledOnceWithExactly(execFilePath, '777')
-    expect(cdMocked.mock.calls.length).toBe(1)
-    expect(cdMocked.mock.calls[0][0]).toBe(folderPath)
-    expect(cdMocked.mock.calls[0][1]).toBe(exeFileName)
-    expect(cdMocked.mock.calls[0][2]).toBe(expectedVersion)
-    expect(apMocked.mock.calls.length).toBe(1)
-    expect(apMocked.mock.calls[0][0]).toBe(cachedPath)
+    expect(getExeFileNameMock.mock.calls.length).toBe(1)
+    expect(chmodSyncStub.withArgs(execFilePath, '777').callCount).toBe(1)
+    expect(cacheDirStub.withArgs(folderPath, exeFileName, version).callCount)
+      .toBe(1)
+    expect(addPathStub.withArgs(cachedPath).callCount).toBe(1)
   })
 
   afterEach(() => restore())
