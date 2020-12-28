@@ -6,9 +6,16 @@
     "typescript.suggestionActions.enabled": true
   },
   "cSpell.words": [
+    "Autobuild",
+    "UNSECURE",
+    "codeql",
     "consts",
+    "ibiqlik",
+    "issuehunt",
+    "liberapay",
     "unzipper",
-    "vercel"
+    "vercel",
+    "yamllint"
   ],
   "editor.rulers": [ 80 ]
 }
