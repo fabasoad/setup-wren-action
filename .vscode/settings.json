@@ -14,6 +14,8 @@
     "issuehunt",
     "liberapay",
     "markdownlint",
+    "semver",
+    "simbo",
     "unzipper",
     "vercel",
     "yamllint"
