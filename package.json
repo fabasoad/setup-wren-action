@@ -54,7 +54,7 @@
     "markdownlint-cli": "0.27.1",
     "mocha-param": "2.0.1",
     "sinon": "10.0.0",
-    "snyk": "1.526.0",
+    "snyk": "1.529.0",
     "ts-jest": "26.5.4",
     "typescript": "4.2.3"
   },
