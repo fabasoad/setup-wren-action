@@ -32,7 +32,7 @@
   "dependencies": {
     "@actions/core": "1.2.7",
     "@actions/tool-cache": "1.6.1",
-    "glob": "7.1.6",
+    "glob": "7.1.7",
     "winston": "3.3.3"
   },
   "devDependencies": {
