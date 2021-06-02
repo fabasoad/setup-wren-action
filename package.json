@@ -41,7 +41,7 @@
     "@types/jest": "26.0.23",
     "@types/node": "15.0.1",
     "@types/sinon": "10.0.0",
-    "@typescript-eslint/eslint-plugin": "4.22.0",
+    "@typescript-eslint/eslint-plugin": "4.26.0",
     "@typescript-eslint/parser": "4.22.0",
     "@vercel/ncc": "0.28.4",
     "chai": "4.3.4",
