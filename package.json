@@ -42,7 +42,7 @@
     "@types/node": "15.3.0",
     "@types/sinon": "10.0.0",
     "@typescript-eslint/eslint-plugin": "4.26.0",
-    "@typescript-eslint/parser": "4.22.0",
+    "@typescript-eslint/parser": "4.23.0",
     "@vercel/ncc": "0.28.4",
     "chai": "4.3.4",
     "eslint": "7.27.0",
@@ -54,7 +54,7 @@
     "markdownlint-cli": "0.27.1",
     "mocha-param": "2.0.1",
     "sinon": "10.0.0",
-    "snyk": "1.575.0",
+    "snyk": "1.595.0",
     "ts-jest": "26.5.5",
     "typescript": "4.3.2"
   },
