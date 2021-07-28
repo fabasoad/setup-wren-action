@@ -8,6 +8,7 @@ on:
       - 'bugfix/**'
       - 'dependabot/*'
       - 'feature/**'
+      - 'snyk-*'
 
 env:
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true
