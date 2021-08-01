@@ -2509,10 +2509,10 @@ eslint-visitor-keys@^2.0.0:
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-2.1.0.tgz#f65328259305927392c938ed44eb0a5c9b2bd303"
   integrity sha512-0rSmRBzXgDzIsD6mGdJgevzgezI534Cer5L/vyMX0kHzT/jiB43jRhd9YUlMGYLQy2zprNmoT8qasCGtY+QaKw==
 
-eslint@7.31.0:
-  version "7.31.0"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-7.31.0.tgz#f972b539424bf2604907a970860732c5d99d3aca"
-  integrity sha512-vafgJpSh2ia8tnTkNUkwxGmnumgckLh5aAbLa1xRmIn9+owi8qBNGKL+B881kNKNTy7FFqTEkpNkUvmw0n6PkA==
+eslint@7.32.0:
+  version "7.32.0"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-7.32.0.tgz#c6d328a14be3fb08c8d1d21e12c02fdb7a2a812d"
+  integrity sha512-VHZ8gX+EDfz+97jGcgyGCyRia/dPOd6Xh9yPv8Bl1+SoaIwD+a/vlrOmGRUyOYu7MwUhc7CxqeaDZU13S4+EpA==
   dependencies:
     "@babel/code-frame" "7.12.11"
     "@eslint/eslintrc" "^0.4.3"
@@ -4837,6 +4837,11 @@ peek-stream@^1.1.0:
     duplexify "^3.5.0"
     through2 "^2.0.3"
 
+pegjs@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/pegjs/-/pegjs-0.10.0.tgz#cf8bafae6eddff4b5a7efb185269eaaf4610ddbd"
+  integrity sha1-z4uvrm7d/0tafvsYUmnqr0YQ3b0=
+
 picomatch@^2.0.4, picomatch@^2.0.5, picomatch@^2.2.1, picomatch@^2.2.3:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.3.0.tgz#f1f061de8f6a4bf022892e2d128234fb98302972"
@@ -5612,10 +5617,10 @@ snyk-try-require@^2.0.0:
     lodash.clonedeep "^4.3.0"
     lru-cache "^5.1.1"
 
-snyk@1.669.0:
-  version "1.669.0"
-  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.669.0.tgz#30a31db5bbd7db08765334608e8b28ae12480144"
-  integrity sha512-VHdw0R5L1ujCeILNr3bAvRE64inwCfUbZizvv1smJ+K0dtlWyJuvAWZW/Py9DhdLx4kbhUcTXQmMmGiUxJnkPg==
+snyk@1.672.0:
+  version "1.672.0"
+  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.672.0.tgz#f40484ad251b0472e250f4d4d96634dec1668c33"
+  integrity sha512-hETpAdvKt/NKX7y4QovWt6bXle3iJ4vcn1z94fHqSDdH3jTSGLE9Bh0HlsD5cajSFpduFfq3DhyDU6gQRiuRnA==
   dependencies:
     "@open-policy-agent/opa-wasm" "^1.2.0"
     "@snyk/cli-interface" "2.11.0"
@@ -5659,6 +5664,7 @@ snyk@1.669.0:
     open "^7.0.3"
     ora "5.4.0"
     os-name "^3.0.0"
+    pegjs "^0.10.0"
     promise-queue "^2.2.5"
     proxy-from-env "^1.0.0"
     rimraf "^2.6.3"

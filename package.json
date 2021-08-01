@@ -45,7 +45,7 @@
     "@typescript-eslint/parser": "4.28.5",
     "@vercel/ncc": "0.29.0",
     "chai": "4.3.4",
-    "eslint": "7.31.0",
+    "eslint": "7.32.0",
     "eslint-config-google": "0.14.0",
     "git-branch-is": "4.0.0",
     "husky": "7.0.1",
@@ -54,7 +54,7 @@
     "markdownlint-cli": "0.28.1",
     "mocha-param": "2.0.1",
     "sinon": "11.1.2",
-    "snyk": "1.669.0",
+    "snyk": "1.672.0",
     "ts-jest": "27.0.4",
     "typescript": "4.3.5"
   },
