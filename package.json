@@ -36,7 +36,7 @@
     "winston": "3.3.3"
   },
   "devDependencies": {
-    "@types/chai": "4.2.21",
+    "@types/chai": "4.2.22",
     "@types/glob": "7.1.4",
     "@types/jest": "27.0.1",
     "@types/node": "16.7.10",
