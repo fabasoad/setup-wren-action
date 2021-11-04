@@ -1,6 +1,6 @@
 {
   "name": "setup-wren-action",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "This GitHub action installs wren",
   "main": "dist/index.js",
   "repository": {
