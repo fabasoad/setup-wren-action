@@ -51,7 +51,7 @@
     "husky": "7.0.2",
     "jest": "27.4.2",
     "jest-circus": "27.4.2",
-    "markdownlint-cli": "0.28.1",
+    "markdownlint-cli": "0.30.0",
     "mocha-param": "2.0.1",
     "sinon": "11.1.2",
     "snyk": "1.782.0",
