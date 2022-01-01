@@ -6,7 +6,7 @@ on:
     branches:
       - 'main'
       - 'bugfix/**'
-      - 'dependabot/*'
+      - 'dependabot/**'
       - 'feature/**'
       - 'snyk-*'
 
@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
-        version: ['0.3.0']
+        version: ['0.3.0', '0.4.0']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2.4.0
@@ -37,6 +37,9 @@ jobs:
       - name: Run script (Linux, MacOS)
         if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
         run: wren_cli ./hello-world.wren
-      - name: Run script (Windows)
-        if: matrix.os == 'windows-latest'
+      - name: Run script (Windows) (0.3.0)
+        if: matrix.os == 'windows-latest' && matrix.version == '0.3.0'
         run: wren_cli-${{ matrix.version }}.exe ./hello-world.wren
+      - name: Run script (Windows) (${{ matrix.version }})
+        if: matrix.os == 'windows-latest' && matrix.version != '0.3.0'
+        run: wren_cli.exe ./hello-world.wren

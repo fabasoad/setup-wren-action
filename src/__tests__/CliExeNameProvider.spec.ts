@@ -5,6 +5,7 @@ import CliExeNameProvider from '../CliExeNameProvider'
 import { CLI_NAME } from '../consts'
 
 interface IFixture {
+  expectedVersion: string
   os: string
   execFileName: string
 }
@@ -14,12 +15,19 @@ describe('CliExeNameProvider', () => {
 
   const expectedVersion: string = 'ey1r6c00'
   const items: IFixture[] = [{
+    expectedVersion: '0.3.0',
     os: 'Windows_NT',
-    execFileName: `${CLI_NAME}-${expectedVersion}.exe`
+    execFileName: `${CLI_NAME}-0.3.0.exe`
   }, {
+    expectedVersion, // random value
+    os: 'Windows_NT',
+    execFileName: `${CLI_NAME}.exe`
+  }, {
+    expectedVersion,
     os: 'Darwin',
     execFileName: CLI_NAME
   }, {
+    expectedVersion,
     os: 'Linux',
     execFileName: CLI_NAME
   }]
@@ -30,7 +38,8 @@ describe('CliExeNameProvider', () => {
 
   itParam('should return exe name successfully', items, (item: IFixture) => {
     osTypeStub.returns(item.os)
-    const provider: CliExeNameProvider = new CliExeNameProvider(expectedVersion)
+    const provider: CliExeNameProvider =
+      new CliExeNameProvider(item.expectedVersion)
     const actual: string = provider.getExeFileName()
     expect(actual).toBe(item.execFileName)
   })

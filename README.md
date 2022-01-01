@@ -6,9 +6,9 @@ This action sets up a [Wren CLI](https://wren.io/cli/).
 
 ## Inputs
 
-| Name    | Required | Description                                                                           | Default | Possible values |
-|---------|----------|---------------------------------------------------------------------------------------|---------|-----------------|
-| version | No       | wren version that can be found [here](https://github.com/wren-lang/wren-cli/releases) | `0.3.0` | `0.3.0`         |
+| Name    | Required | Description                                                                           | Default | Possible values  |
+|---------|----------|---------------------------------------------------------------------------------------|---------|------------------|
+| version | No       | wren version that can be found [here](https://github.com/wren-lang/wren-cli/releases) | `0.4.0` | `0.3.0`, `0.4.0` |
 
 ## Example usage
 
