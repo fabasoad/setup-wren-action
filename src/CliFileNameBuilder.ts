@@ -2,13 +2,13 @@ import os from 'os'
 import { CLI_NAME } from './consts'
 
 export default class CliFileNameBuilder implements ICliFileNameBuilder {
-  private version: string
+  private readonly version: string
 
   constructor(version: string) {
     this.version = version
   }
 
-  private getOS(): string {
+  private static getOS(): string {
     switch (os.type()) {
     case 'Darwin':
       return 'mac'
@@ -19,7 +19,11 @@ export default class CliFileNameBuilder implements ICliFileNameBuilder {
     }
   }
 
+  getCliName(): string {
+    return this.version === '0.3.0' ? CLI_NAME : 'wren-cli'
+  }
+
   build(): string {
-    return `${CLI_NAME}-${this.getOS()}-${this.version}`
+    return `${this.getCliName()}-${CliFileNameBuilder.getOS()}-${this.version}`
   }
 }
