@@ -5,13 +5,9 @@ on:
   push:
     branches:
       - 'main'
-      - 'bugfix/**'
+      - 'fix-*'
       - 'dependabot/**'
-      - 'feature/**'
-      - 'snyk-*'
-
-env:
-  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+      - 'feature-*'
 
 jobs:
   functional_tests:
