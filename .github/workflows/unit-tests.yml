@@ -5,13 +5,9 @@ on:
   push:
     branches:
       - 'main'
-      - 'bugfix/**'
+      - 'fix-*'
       - 'dependabot/**'
-      - 'feature/**'
-      - 'snyk-*'
-
-env:
-  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+      - 'feature-*'
 
 jobs:
   unit_tests:
@@ -19,10 +15,10 @@ jobs:
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v3
       - name: Cache node_modules
         id: cache
-        uses: actions/cache@v2.1.7
+        uses: actions/cache@v3
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
