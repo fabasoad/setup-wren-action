@@ -18,11 +18,11 @@ jobs:
         version: ['0.3.0', '0.4.0']
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.ref }}
       - name: Compile
-        run: yarn install
+        run: yarn install --ignore-scripts
       - name: Build
         run: yarn run build
       - name: Install wren
