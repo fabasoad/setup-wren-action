@@ -9,7 +9,7 @@ inputs:
   version:
     description: 'Wren CLI version.'
     required: false
-    default: 0.3.0
+    default: 0.4.0
 runs:
   using: 'node16'
   main: 'dist/index.js'
