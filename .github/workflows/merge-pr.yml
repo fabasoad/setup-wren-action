@@ -12,5 +12,26 @@ jobs:
     if: ${{ github.ref_name == 'pre-commit-ci-update-config' }}
     steps:
       - name: Print
-        run: echo 'Hello ${{ toJSON(payload) }}!'
+        run: echo 'Hello ${{ toJSON(job) }}!'
         shell: bash
+      - name: Test
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const path = require('path');
+            const workflowFileName = path.basename(__filename);
+
+            const repoParts = '${{ github.repository }}'.split('/');
+            const owner = repoParts[0];
+            const repo = repoParts[1];
+            const { check_suite_id } = octokit.rest.actions.listWorkflowRuns({
+              owner,
+              repo,
+              workflowFileName,
+            });
+            const res = github.rest.checks.getSuite({
+              owner,
+              repo,
+              check_suite_id,
+            });
+            console.log(res);
