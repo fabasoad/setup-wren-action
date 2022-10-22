@@ -19,7 +19,7 @@ jobs:
         with:
           script: |
             const path = require('path');
-            const workflowFileName = path.basename(__filename);
+            const workflowFileName = path.basename(module.filename);
 
             const repoParts = '${{ github.repository }}'.split('/');
             const owner = repoParts[0];
