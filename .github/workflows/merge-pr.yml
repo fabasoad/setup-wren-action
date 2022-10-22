@@ -2,7 +2,7 @@
 name: Merge PR
 
 on:
-  check_suite:
+  check_run:
     types: [completed]
 
 jobs:
