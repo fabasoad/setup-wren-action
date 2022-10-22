@@ -1,0 +1,15 @@
+---
+name: Merge PR
+
+on:
+  check_suite:
+    types: [completed]
+
+jobs:
+  print_hello:
+    name: Print Hello!
+    runs-on: ubuntu-latest
+    steps:
+      name: Print
+      run: echo 'Hello ${{ github.ref_name }}!'
+      shell: bash
