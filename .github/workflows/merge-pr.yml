@@ -10,6 +10,6 @@ jobs:
     name: Print Hello!
     runs-on: ubuntu-latest
     steps:
-      name: Print
-      run: echo 'Hello ${{ github.ref_name }}!'
-      shell: bash
+      - name: Print
+        run: echo 'Hello ${{ github.ref_name }}!'
+        shell: bash
