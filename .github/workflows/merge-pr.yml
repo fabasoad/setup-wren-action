@@ -18,20 +18,18 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const path = require('path');
-            const workflowFileName = path.basename(module.filename);
-
-            const repoParts = '${{ github.repository }}'.split('/');
-            const owner = repoParts[0];
-            const repo = repoParts[1];
-            const { check_suite_id } = octokit.rest.actions.listWorkflowRuns({
-              owner,
-              repo,
-              workflowFileName,
-            });
-            const res = github.rest.checks.getSuite({
-              owner,
-              repo,
-              check_suite_id,
-            });
-            console.log(res);
+            console.log(context);
+#            const path = require('path');
+#            const workflowFileName = path.basename(module.filename);
+#
+#            const { check_suite_id } = octokit.rest.actions.listWorkflowRuns({
+#              owner: context.repo.owner,
+#              repo: context.repo.repo,
+#              workflowFileName,
+#            });
+#            const res = github.rest.checks.getSuite({
+#              owner: context.repo.owner,
+#              repo: context.repo.repo,
+#              check_suite_id,
+#            });
+#            console.log(res);
