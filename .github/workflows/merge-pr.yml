@@ -20,9 +20,10 @@ jobs:
           script: |
             console.log(context);
             console.log('-------!--------');
-            const res = await github.rest.checks.listForRef({
+            const { data } = await github.rest.checks.listForRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: context.ref,
             });
-            console.log(res);
+            console.log(data.check_runs[0]);
+            console.log(data.check_runs[1]);
