@@ -2,14 +2,14 @@
 name: Merge PR
 
 on:
-  check_run:
+  check_suite:
     types: [completed]
 
 jobs:
   print_hello:
     name: Print Hello
     runs-on: ubuntu-latest
-    if: ${{ github.ref_name == "pre-commit-ci-update-config" }}
+    if: ${{ github.ref_name == 'pre-commit-ci-update-config' }}
     steps:
       - name: Print
         run: echo 'Hello ${{ github.ref_name }}!'
