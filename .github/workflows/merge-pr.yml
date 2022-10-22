@@ -12,5 +12,5 @@ jobs:
     if: ${{ github.ref_name == 'pre-commit-ci-update-config' }}
     steps:
       - name: Print
-        run: echo 'Hello ${{ github.ref_name }}!'
+        run: echo 'Hello ${{ toJSON(payload) }}!'
         shell: bash
