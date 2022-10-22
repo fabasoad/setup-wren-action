@@ -20,7 +20,7 @@ jobs:
           script: |
             console.log(context);
             console.log('-------!--------');
-            const res = github.rest.checks.getSuite({
+            const res = await github.rest.checks.getSuite({
               owner: context.repo.owner,
               repo: context.repo.repo,
               check_suite_id: context.payload.check_suite.id,
