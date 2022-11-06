@@ -33,3 +33,22 @@ jobs:
         if: ${{ matrix.os == 'windows-latest' }}
         run: wren_cli.exe ./hello-world.wren
         shell: pwsh
+  run-script-alpine:
+    name: Run script (alpine-latest)
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        version: ['0.3.0', '0.4.0']
+    runs-on: ubuntu-latest
+    container:
+      image: alpine:latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install wren
+        uses: ./
+        with:
+          version: ${{ matrix.version }}
+      - name: Run script
+        run: wren_cli ./hello-world.wren
+        shell: bash

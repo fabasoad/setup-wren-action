@@ -9,8 +9,10 @@ This action sets up a [Wren CLI](https://wren.io/cli/).
 ## Prerequisites
 
 The following tools have to be installed for successful work of this GitHub action:
-[bash](https://www.gnu.org/software/bash), [wget](https://www.gnu.org/software/wget/),
+
+- Linux, macOS: [bash](https://www.gnu.org/software/bash), [wget](https://www.gnu.org/software/wget/),
 [unzip](https://linux.die.net/man/1/unzip).
+- Windows: [pwsh](https://github.com/PowerShell/PowerShell)
 
 ## Inputs
 
