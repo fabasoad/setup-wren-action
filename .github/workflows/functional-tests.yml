@@ -55,7 +55,7 @@ jobs:
           version: ${{ matrix.version }}
       - name: Run script
         run: |
-          ls -A /__w/_temp/wren
+          ls -A /__w/_temp/wren/wren-cli-linux-${{ matrix.version }}
           echo $PATH
           wren_cli ./hello-world.wren
         shell: bash
