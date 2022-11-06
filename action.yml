@@ -37,7 +37,7 @@ runs:
     - name: Install wren (Linux, macOS)
       if: ${{ steps.info.outputs.WREN_INSTALLED == 'false' && runner.os != 'Windows'}}
       env:
-        DOWNLOAD_URL: https://github.com/wren-lang/wren-cli/releases/download/${{ inputs.version }}/wren-cli-${{ steps.info.outputs.WREN_BINARY_NAME }}-${{ inputs.version }}.zip
+        DOWNLOAD_URL: https://github.com/wren-lang/wren-cli/releases/download/${{ inputs.version }}/wren_cli-${{ steps.info.outputs.WREN_BINARY_NAME }}-${{ inputs.version }}.zip
       run: |
         wget -q -O wren.zip $DOWNLOAD_URL && unzip wren.zip && rm -f wren.zip
         exe_path=$(find . -name "${{ steps.info.outputs.WREN_EXEC_NAME }}")
