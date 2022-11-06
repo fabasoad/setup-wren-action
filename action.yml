@@ -47,8 +47,6 @@ runs:
         wget -q -O wren.zip $DOWNLOAD_URL && unzip wren.zip && rm -f wren.zip
         exe_path=$(find "${{ steps.info.outputs.WREN_PATH }}" -name "${{ steps.info.outputs.WREN_EXEC_NAME }}")
         bin_path=$(dirname $exe_path)
-        cd $bin_path
-        chmod +x "${{ steps.info.outputs.WREN_EXEC_NAME }}"
         echo "$bin_path" >> $GITHUB_PATH
       shell: bash
       working-directory: ${{ steps.info.outputs.WREN_PATH }}
