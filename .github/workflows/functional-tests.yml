@@ -45,6 +45,9 @@ jobs:
       image: alpine:latest
     steps:
       - uses: actions/checkout@v3
+      - name: Install tools
+        run: apk add bash
+        shell: sh
       - name: Install wren
         uses: ./
         with:
