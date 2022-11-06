@@ -62,7 +62,7 @@ runs:
         Get-ChildItem -Path "$BinPath"
         if ("${{ inputs.version }}" -eq "0.3.0") {
           $BinPath="${{ steps.info.outputs.WREN_PATH }}"
-          Move-Item -Path "$BinPath\wren_cli-0.3.0.exe" -Destination "$BinPath\wren_cli.exe"
+          Move-Item -Path "$BinPath\wren_cli-0.3.0.exe" -Destination "$BinPath\${{ steps.info.outputs.WREN_EXEC_NAME }}"
         } else {
           $BinPath="${{ steps.info.outputs.WREN_PATH }}\${{ steps.info.outputs.WREN_BINARY_NAME }}-${{ inputs.version }}"
         }
