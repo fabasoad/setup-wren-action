@@ -34,14 +34,13 @@ runs:
         mkdir -p "$RUNNER_TEMP/wren"
         echo "WREN_PATH=$RUNNER_TEMP/wren" >> $GITHUB_OUTPUT
       shell: bash
-    - name: Install wren (Linux, macOS)
-      if: ${{ steps.info.outputs.WREN_INSTALLED == 'false' && runner.os != 'Windows'}}
+    - name: Install wren
+      if: ${{ steps.info.outputs.WREN_INSTALLED == 'false' }}
       env:
         DOWNLOAD_URL: https://github.com/wren-lang/wren-cli/releases/download/${{ inputs.version }}/wren_cli-${{ steps.info.outputs.WREN_BINARY_NAME }}-${{ inputs.version }}.zip
       run: |
         wget -q -O wren.zip $DOWNLOAD_URL && unzip wren.zip && rm -f wren.zip
-        exe_path=$(find . -name "${{ steps.info.outputs.WREN_EXEC_NAME }}")
+        exe_path=$(find "${{ steps.info.outputs.WREN_PATH }}" -name "${{ steps.info.outputs.WREN_EXEC_NAME }}")
         bin_path=$(dirname $exe_path)
         echo "$bin_path" >> $GITHUB_PATH
       shell: bash
-      working-directory: ${{ steps.info.outputs.WREN_PATH }}
