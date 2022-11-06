@@ -12,12 +12,12 @@ on:
 jobs:
   run-script:
     name: Run script
+    if: false
     timeout-minutes: 5
     strategy:
       fail-fast: false
       matrix:
-#        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
-        os: ['windows-latest']
+        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
         version: ['0.3.0', '0.4.0']
     runs-on: ${{ matrix.os }}
     steps:
@@ -55,6 +55,7 @@ jobs:
           version: ${{ matrix.version }}
       - name: Run script
         run: |
+          ls -A /__w/_temp/wren
           echo $PATH
           wren_cli ./hello-world.wren
         shell: bash
