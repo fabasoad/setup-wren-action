@@ -53,5 +53,7 @@ jobs:
         with:
           version: ${{ matrix.version }}
       - name: Run script
-        run: wren_cli ./hello-world.wren
+        run: |
+          env
+          wren_cli ./hello-world.wren
         shell: bash
