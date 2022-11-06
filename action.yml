@@ -58,8 +58,6 @@ runs:
         Invoke-WebRequest -URI $Env:DOWNLOAD_URL -OutFile wren.zip
         Expand-Archive wren.zip -DestinationPath .
         Remove-Item -Path wren.zip
-        Get-ChildItem -Path "${{ steps.info.outputs.WREN_PATH }}"
-        Get-ChildItem -Path "$BinPath"
         if ("${{ inputs.version }}" -eq "0.3.0") {
           $BinPath="${{ steps.info.outputs.WREN_PATH }}"
           Move-Item -Path "$BinPath\wren_cli-0.3.0.exe" -Destination "$BinPath\${{ steps.info.outputs.WREN_EXEC_NAME }}"
