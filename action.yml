@@ -44,3 +44,4 @@ runs:
         bin_path=$(dirname $exe_path)
         echo "$bin_path" >> $GITHUB_PATH
       shell: bash
+      working-directory: ${{ steps.info.outputs.WREN_PATH }}
