@@ -9,32 +9,26 @@ on:
       - 'feature-*'
 
 jobs:
-  functional_tests:
+  run-script:
     name: Run script
     timeout-minutes: 5
     strategy:
+      fail-fast: false
       matrix:
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
         version: ['0.3.0', '0.4.0']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.ref }}
-      - name: Compile
-        run: yarn install --ignore-scripts
-      - name: Build
-        run: yarn run build
       - name: Install wren
         uses: ./
         with:
           version: ${{ matrix.version }}
       - name: Run script (Linux, MacOS)
-        if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
+        if: ${{ matrix.os != 'windows-latest' }}
         run: wren_cli ./hello-world.wren
-      - name: Run script (Windows) (0.3.0)
-        if: matrix.os == 'windows-latest' && matrix.version == '0.3.0'
-        run: wren_cli-${{ matrix.version }}.exe ./hello-world.wren
-      - name: Run script (Windows) (${{ matrix.version }})
-        if: matrix.os == 'windows-latest' && matrix.version != '0.3.0'
+        shell: bash
+      - name: Run script (Windows)
+        if: ${{ matrix.os == 'windows-latest' }}
         run: wren_cli.exe ./hello-world.wren
+        shell: pwsh

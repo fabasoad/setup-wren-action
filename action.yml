@@ -11,5 +11,59 @@ inputs:
     required: false
     default: 0.4.0
 runs:
-  using: 'node16'
-  main: 'dist/index.js'
+  using: 'composite'
+  steps:
+    - name: Collect info
+      id: info
+      run: |
+        if [[ "${{ runner.os }}" == "Windows" ]]; then
+          WREN_EXEC_NAME=wren_cli.exe
+          BIN_2=windows
+        else
+          WREN_EXEC_NAME=wren_cli
+          if [[ "${{ runner.os }}" == "Linux" ]]; then
+            BIN_2=linux
+          else
+            BIN_2=mac
+          fi
+        fi
+        if [[ "${{ inputs.version }}" == "0.3.0" ]]; then
+          BIN_1=wren_cli
+        else
+          BIN_1=wren-cli
+        fi
+        echo "WREN_EXEC_NAME=$WREN_EXEC_NAME" >> $GITHUB_OUTPUT
+        echo "WREN_BINARY_NAME=$BIN_1-$BIN_2" >> $GITHUB_OUTPUT
+        WREN_INSTALLED=$(if command -v $WREN_EXEC_NAME >/dev/null 2>&1; then echo true; else echo false; fi)
+        echo "WREN_INSTALLED=$WREN_INSTALLED" >> $GITHUB_OUTPUT
+        mkdir -p "$RUNNER_TEMP/wren"
+        echo "WREN_PATH=$RUNNER_TEMP/wren" >> $GITHUB_OUTPUT
+      shell: bash
+    - name: Install wren (Linux, macOS)
+      if: ${{ steps.info.outputs.WREN_INSTALLED == 'false' && runner.os != 'Windows' }}
+      env:
+        DOWNLOAD_URL: https://github.com/wren-lang/wren-cli/releases/download/${{ inputs.version }}/${{ steps.info.outputs.WREN_BINARY_NAME }}-${{ inputs.version }}.zip
+      run: |
+        wget -q -O wren.zip $DOWNLOAD_URL && unzip wren.zip && rm -f wren.zip
+        exe_path=$(find "${{ steps.info.outputs.WREN_PATH }}" -name "${{ steps.info.outputs.WREN_EXEC_NAME }}")
+        bin_path=$(dirname $exe_path)
+        echo "$bin_path" >> $GITHUB_PATH
+      shell: bash
+      working-directory: ${{ steps.info.outputs.WREN_PATH }}
+    - name: Install wren (Windows)
+      if: ${{ steps.info.outputs.WREN_INSTALLED == 'false' && runner.os == 'Windows' }}
+      env:
+        DOWNLOAD_URL: https://github.com/wren-lang/wren-cli/releases/download/${{ inputs.version }}/${{ steps.info.outputs.WREN_BINARY_NAME }}-${{ inputs.version }}.zip
+      run: |
+        Invoke-WebRequest -URI $Env:DOWNLOAD_URL -OutFile wren.zip
+        Expand-Archive wren.zip -DestinationPath .
+        Remove-Item -Path wren.zip
+        if ("${{ inputs.version }}" -eq "0.3.0") {
+          $BinPath="${{ steps.info.outputs.WREN_PATH }}"
+          Move-Item -Path "$BinPath\wren_cli-0.3.0.exe" -Destination "$BinPath\${{ steps.info.outputs.WREN_EXEC_NAME }}"
+        } else {
+          $BinPath="${{ steps.info.outputs.WREN_PATH }}\${{ steps.info.outputs.WREN_BINARY_NAME }}-${{ inputs.version }}"
+        }
+        echo $BinPath | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      shell: pwsh
+      working-directory: ${{ steps.info.outputs.WREN_PATH }}
