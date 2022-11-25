@@ -5,8 +5,7 @@ on:
   push:
     branches:
       - 'main'
-      - 'fix-*'
-      - 'feature-*'
+  pull_request:
 
 jobs:
   run-script:
@@ -24,11 +23,11 @@ jobs:
         uses: ./
         with:
           version: ${{ matrix.version }}
-      - name: Run script (Linux, MacOS)
-        if: ${{ matrix.os != 'windows-latest' }}
+      - name: Run script (Linux, macOS)
+        if: ${{ runner.os != 'Windows' }}
         run: wren_cli ./hello-world.wren
-        shell: bash
+        shell: sh
       - name: Run script (Windows)
-        if: ${{ matrix.os == 'windows-latest' }}
+        if: ${{ runner.os == 'Windows' }}
         run: wren_cli.exe ./hello-world.wren
         shell: pwsh
