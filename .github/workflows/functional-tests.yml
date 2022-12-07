@@ -14,20 +14,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
+        os: ['ubuntu', 'macos', 'windows']
         version: ['0.3.0', '0.4.0']
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-latest
     steps:
       - uses: actions/checkout@v3
       - name: Install wren
         uses: ./
         with:
           version: ${{ matrix.version }}
-      - name: Run script (Linux, macOS)
-        if: ${{ runner.os != 'Windows' }}
+      - name: Run script
         run: wren_cli ./hello-world.wren
         shell: sh
-      - name: Run script (Windows)
-        if: ${{ runner.os == 'Windows' }}
-        run: wren_cli.exe ./hello-world.wren
-        shell: pwsh
