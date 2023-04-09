@@ -1,11 +1,15 @@
 ---
 name: Functional Tests
 
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - 'main'
   pull_request:
+
+defaults:
+  run:
+    shell: sh
 
 jobs:
   run-script:
@@ -25,4 +29,3 @@ jobs:
           version: ${{ matrix.version }}
       - name: Run script
         run: wren_cli ./hello-world.wren
-        shell: sh
