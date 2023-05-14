@@ -3,7 +3,7 @@
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://stand-with-ukraine.pp.ua)
 ![GitHub release](https://img.shields.io/github/v/release/fabasoad/setup-wren-action?include_prereleases)
 ![Functional Tests](https://github.com/fabasoad/setup-wren-action/workflows/Functional%20Tests/badge.svg)
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/fabasoad/setup-wren-action/main.svg)](https://results.pre-commit.ci/latest/github/fabasoad/setup-wren-action/main)
+![pre-commit](https://github.com/fabasoad/setup-wren-action/actions/workflows/pre-commit.yml/badge.svg)
 
 This action sets up a [Wren CLI](https://wren.io/cli/).
 
@@ -16,9 +16,11 @@ The following tools have to be installed for successful work of this GitHub acti
 
 ## Inputs
 
+<!-- prettier-ignore-start -->
 | Name    | Required | Description                                                                           | Default | Possible values  |
 |---------|----------|---------------------------------------------------------------------------------------|---------|------------------|
 | version | No       | wren version that can be found [here](https://github.com/wren-lang/wren-cli/releases) | `0.4.0` | `0.3.0`, `0.4.0` |
+<!-- prettier-ignore-end -->
 
 ## Example usage
 
