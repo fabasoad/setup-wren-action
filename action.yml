@@ -1,17 +1,17 @@
 ---
-name: 'Setup Wren CLI'
+name: "Setup Wren CLI"
 author: Yevhen Fabizhevskyi
-description: 'This action sets up a wren CLI to run wren scripts.'
+description: "This action sets up a wren CLI to run wren scripts."
 branding:
   icon: terminal
   color: gray-dark
 inputs:
   version:
-    description: 'Wren CLI version.'
+    description: "Wren CLI version."
     required: false
     default: 0.4.0
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - name: Collect info
       id: info
