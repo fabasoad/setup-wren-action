@@ -2,8 +2,9 @@
 
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://stand-with-ukraine.pp.ua)
 ![GitHub release](https://img.shields.io/github/v/release/fabasoad/setup-wren-action?include_prereleases)
-![Functional Tests](https://github.com/fabasoad/setup-wren-action/workflows/Functional%20Tests/badge.svg)
-![pre-commit](https://github.com/fabasoad/setup-wren-action/actions/workflows/pre-commit.yml/badge.svg)
+![functional-tests](https://github.com/fabasoad/setup-wren-action/actions/workflows/functional-tests.yml/badge.svg)
+![security](https://github.com/fabasoad/setup-wren-action/actions/workflows/security.yml/badge.svg)
+![linting](https://github.com/fabasoad/setup-wren-action/actions/workflows/linting.yml/badge.svg)
 
 This action sets up a [Wren CLI](https://wren.io/cli/).
 
