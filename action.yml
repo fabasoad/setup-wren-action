@@ -55,11 +55,7 @@ runs:
       id: install-wren-cli
       run: |
         tag_name="${{ steps.download-binary.outputs.tag_name }}"
-        if [ "${tag_name}" = "0.3.0" ]; then
-          sep="_"
-        else
-          sep="-"
-        fi
+        sep="${{ steps.download-binary.outputs.tag_name == '0.3.0' && '_' || '-' }}"
         subdir="/wren${sep}cli-${{ runner.os == 'Linux' && 'linux' || (runner.os == 'macOS' && 'mac' || 'windows') }}-${tag_name}"
         if [ "${tag_name}" = "0.3.0" ] && [ "${RUNNER_OS}" != "Linux" ]; then
           subdir=""
@@ -68,6 +64,7 @@ runs:
         if [ "${RUNNER_OS}" != "Windows" ]; then
           chmod +x "${bin_path}/wren_cli"
         fi
+        ls -la "${bin_path}"
         echo "${bin_path}" >> "$GITHUB_PATH"
       shell: sh
 
