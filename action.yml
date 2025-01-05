@@ -68,7 +68,6 @@ runs:
         else
           chmod +x "${bin_path}/wren_cli"
         fi
-        ls -la "${bin_path}"
         echo "${bin_path}" >> "$GITHUB_PATH"
       shell: sh
 
