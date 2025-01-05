@@ -61,7 +61,11 @@ runs:
           subdir=""
         fi
         bin_path="${{ steps.info.outputs.bin-path }}${subdir}"
-        if [ "${RUNNER_OS}" != "Windows" ]; then
+        if [ "${RUNNER_OS}" = "Windows" ]; then
+          if [ "${tag_name}" = "0.3.0" ]; then
+            mv "${bin_path}/wren_cli-0.3.0.exe" "${bin_path}/wren_cli.exe"
+          fi
+        else
           chmod +x "${bin_path}/wren_cli"
         fi
         ls -la "${bin_path}"
