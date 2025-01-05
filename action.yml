@@ -62,7 +62,7 @@ runs:
         fi
         bin_path="${{ steps.info.outputs.bin-path }}/wren${sep}cli-${{ runner.os == 'Linux' && 'linux' || (runner.os == 'macOS' && 'mac' || 'windows') }}-${tag_name}"
         if [ "${RUNNER_OS}" != "Windows" ]; then
-          ls -la "${bin_path}"
+          ls -la "${{ steps.info.outputs.bin-path }}"
           chmod +x "${bin_path}/wren_cli"
         fi
         echo "${bin_path}" >> "$GITHUB_PATH"
