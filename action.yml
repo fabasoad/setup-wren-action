@@ -60,9 +60,12 @@ runs:
         else
           sep="-"
         fi
-        bin_path="${{ steps.info.outputs.bin-path }}/wren${sep}cli-${{ runner.os == 'Linux' && 'linux' || (runner.os == 'macOS' && 'mac' || 'windows') }}-${tag_name}"
+        subdir="/wren${sep}cli-${{ runner.os == 'Linux' && 'linux' || (runner.os == 'macOS' && 'mac' || 'windows') }}-${tag_name}"
+        if [ "${tag_name}" = "0.3.0" ] && [ "${RUNNER_OS}" != "Linux" ]; then
+          subdir=""
+        fi
+        bin_path="${{ steps.info.outputs.bin-path }}${subdir}"
         if [ "${RUNNER_OS}" != "Windows" ]; then
-          ls -la "${{ steps.info.outputs.bin-path }}"
           chmod +x "${bin_path}/wren_cli"
         fi
         echo "${bin_path}" >> "$GITHUB_PATH"
