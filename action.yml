@@ -55,7 +55,7 @@ runs:
       id: install-wren-cli
       run: |
         tag_name="${{ steps.download-binary.outputs.tag_name }}"
-        bin_path="${{ steps.info.outputs.bin-path }}/wren-cli-${{ runner.os == 'Linux' && 'linux' || (runner.os == 'macOS' && 'mac' || 'windows') }}-${tag_name}.zip"
+        bin_path="${{ steps.info.outputs.bin-path }}/wren-cli-${{ runner.os == 'Linux' && 'linux' || (runner.os == 'macOS' && 'mac' || 'windows') }}-${tag_name}"
         if [ "${RUNNER_OS}" != "Windows" ]; then
           chmod +x "${bin_path}/wren_cli"
         fi
