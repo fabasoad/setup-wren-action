@@ -7,66 +7,70 @@ branding:
   color: gray-dark
 inputs:
   version:
-    description: "Wren CLI version."
+    description: wren CLI version. Defaults to the latest version.
     required: false
-    default: 0.4.0
+    default: "latest"
+  force:
+    description: |
+      If "false" skips installation if wren CLI is already installed. If "true"
+      installs wren CLI in any case. Defaults to "false".
+    required: false
+    default: "false"
+  github-token:
+    description: |
+      GitHub token that is used to send requests to GitHub API such as getting
+      latest release. Defaults to the token provided by GitHub Actions environment.
+    required: false
+    default: ${{ github.token }}
+outputs:
+  installed:
+    description: Whether wren CLI was installed or not.
+    value: "${{ steps.install-wren-cli.outcome == 'success' }}"
 runs:
   using: "composite"
   steps:
     - name: Collect info
       id: info
       env:
-        INPUT_VERSION: "${{ inputs.version }}"
+        INPUT_FORCE: "${{ inputs.force }}"
+      run: ./collect-info.sh "${INPUT_FORCE}"
+      shell: sh
+      working-directory: "${{ github.action_path }}/src"
+
+    - name: Download binary
+      if: ${{ steps.info.outputs.bin-installed == 'false' }}
+      id: download-binary
+      uses: robinraju/release-downloader@v1
+      with:
+        repository: "wren-lang/wren-cli"
+        latest: "${{ inputs.version == 'latest' }}"
+        tag: "${{ inputs.version != 'latest' && inputs.version || '' }}"
+        fileName: "wren*cli-${{ runner.os == 'Linux' && 'linux' || (runner.os == 'macOS' && 'mac' || 'windows') }}-*.zip"
+        extract: "true"
+        out-file-path: "${{ steps.info.outputs.bin-dir }}"
+        token: "${{ inputs.github-token }}"
+
+    - name: Install wren CLI
+      if: ${{ steps.info.outputs.bin-installed == 'false' }}
+      id: install-wren-cli
       run: |
+        tag_name="${{ steps.download-binary.outputs.tag_name }}"
+        sep="${{ steps.download-binary.outputs.tag_name == '0.3.0' && '_' || '-' }}"
+        subdir="/wren${sep}cli-${{ runner.os == 'Linux' && 'linux' || (runner.os == 'macOS' && 'mac' || 'windows') }}-${tag_name}"
+        if [ "${tag_name}" = "0.3.0" ] && [ "${RUNNER_OS}" != "Linux" ]; then
+          subdir=""
+        fi
+        bin_path="${{ steps.info.outputs.bin-path }}${subdir}"
         if [ "${RUNNER_OS}" = "Windows" ]; then
-          WREN_EXEC_NAME=wren_cli.exe
-          BIN_2=windows
-        else
-          WREN_EXEC_NAME=wren_cli
-          if [ "${RUNNER_OS}" = "Linux" ]; then
-            BIN_2=linux
-          else
-            BIN_2=mac
+          if [ "${tag_name}" = "0.3.0" ]; then
+            mv "${bin_path}/wren_cli-0.3.0.exe" "${bin_path}/wren_cli.exe"
           fi
-        fi
-        if [ "${INPUT_VERSION}" = "0.3.0" ]; then
-          BIN_1=wren_cli
         else
-          BIN_1=wren-cli
+          chmod +x "${bin_path}/wren_cli"
         fi
-        echo "WREN_EXEC_NAME=$WREN_EXEC_NAME" >> $GITHUB_OUTPUT
-        echo "WREN_BINARY_NAME=$BIN_1-$BIN_2" >> $GITHUB_OUTPUT
-        WREN_INSTALLED=$(if command -v $WREN_EXEC_NAME >/dev/null 2>&1; then echo true; else echo false; fi)
-        echo "WREN_INSTALLED=$WREN_INSTALLED" >> $GITHUB_OUTPUT
-        mkdir -p "$RUNNER_TEMP/wren"
-        echo "WREN_PATH=$RUNNER_TEMP/wren" >> $GITHUB_OUTPUT
+        echo "${bin_path}" >> "$GITHUB_PATH"
       shell: sh
-    - name: Install wren (Linux, macOS)
-      if: ${{ steps.info.outputs.WREN_INSTALLED == 'false' && runner.os != 'Windows' }}
-      env:
-        DOWNLOAD_URL: https://github.com/wren-lang/wren-cli/releases/download/${{ inputs.version }}/${{ steps.info.outputs.WREN_BINARY_NAME }}-${{ inputs.version }}.zip
-      run: |
-        wget -q -O wren.zip $DOWNLOAD_URL && unzip wren.zip && rm -f wren.zip
-        exe_path=$(find "${{ steps.info.outputs.WREN_PATH }}" -name "${{ steps.info.outputs.WREN_EXEC_NAME }}")
-        bin_path=$(dirname $exe_path)
-        echo "$bin_path" >> $GITHUB_PATH
+
+    - name: Print version
+      run: wren_cli --version
       shell: sh
-      working-directory: ${{ steps.info.outputs.WREN_PATH }}
-    - name: Install wren (Windows)
-      if: ${{ steps.info.outputs.WREN_INSTALLED == 'false' && runner.os == 'Windows' }}
-      env:
-        DOWNLOAD_URL: https://github.com/wren-lang/wren-cli/releases/download/${{ inputs.version }}/${{ steps.info.outputs.WREN_BINARY_NAME }}-${{ inputs.version }}.zip
-        INPUT_VERSION: "${{ inputs.version }}"
-      run: |
-        Invoke-WebRequest -URI $Env:DOWNLOAD_URL -OutFile wren.zip
-        Expand-Archive wren.zip -DestinationPath .
-        Remove-Item -Path wren.zip
-        if ($Env:INPUT_VERSION -eq "0.3.0") {
-          $BinPath="${{ steps.info.outputs.WREN_PATH }}"
-          Move-Item -Path "$BinPath\wren_cli-0.3.0.exe" -Destination "$BinPath\${{ steps.info.outputs.WREN_EXEC_NAME }}"
-        } else {
-          $BinPath="${{ steps.info.outputs.WREN_PATH }}\${{ steps.info.outputs.WREN_BINARY_NAME }}-" + $Env:INPUT_VERSION
-        }
-        echo $BinPath | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-      shell: pwsh
-      working-directory: ${{ steps.info.outputs.WREN_PATH }}

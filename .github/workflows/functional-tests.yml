@@ -4,23 +4,55 @@ name: Functional Tests
 on: # yamllint disable-line rule:truthy
   push:
     branches:
-      - "main"
+      - main
   pull_request:
+    paths:
+      - .github/workflows/functional-tests.yml
+      - src/**
+      - action.yml
+  schedule:
+    # Every Friday at 09:00 JST
+    - cron: "0 0 * * 5"
+  workflow_dispatch: {}
 
 defaults:
   run:
     shell: sh
 
 jobs:
+  get-versions:
+    name: Get 3 latest versions
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      versions: ${{ steps.prepare-list.outputs.versions }}
+    steps:
+      - name: Get releases
+        id: github-releases
+        uses: yakubique/github-releases@v1.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          repository: "wren-lang/wren-cli"
+          sort: "desc"
+      - name: Prepare list
+        id: prepare-list
+        env:
+          RELEASES_AMOUNT: "3"
+        run: |
+          versions=$(echo '${{ steps.github-releases.outputs.releases }}' \
+            | jq -c -r --arg n "${RELEASES_AMOUNT}" '.[0:($n | tonumber)] | . += ["latest"]')
+          echo "versions=${versions}" >> "$GITHUB_OUTPUT"
   run-script:
     name: Run script
+    needs: [get-versions]
+    runs-on: ${{ matrix.os }}-latest
     timeout-minutes: 5
     strategy:
       fail-fast: false
       matrix:
         os: ["ubuntu", "macos", "windows"]
-        version: ["0.3.0", "0.4.0"]
-    runs-on: ${{ matrix.os }}-latest
+        version: ${{ fromJSON(needs.get-versions.outputs.versions) }}
     steps:
       - name: Checkout ${{ github.repository }}
         uses: actions/checkout@v4
@@ -28,5 +60,39 @@ jobs:
         uses: ./
         with:
           version: ${{ matrix.version }}
-      - name: Run script
-        run: wren_cli ./hello-world.wren
+      - name: Validate command
+        run: |
+          [ "$(wren_cli ./hello-world.wren)" = "Hello World!" ] || exit 1
+  test-force:
+    name: Test force
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        force: ["true", "false"]
+    steps:
+      - name: Checkout ${{ github.repository }}
+        uses: actions/checkout@v4
+      - name: Setup Wren 1
+        id: setup-wren-1
+        uses: ./
+      - name: Setup Wren 2
+        id: setup-wren-2
+        uses: ./
+        with:
+          force: ${{ matrix.force }}
+      - name: Test action completion
+        run: |
+          test_equal() {
+            if [ "${2}" != "${3}" ]; then
+              echo "::error title=${1}::Expected: ${3}. Actual: ${2}."
+              exit 1
+            fi
+          }
+          test_equal "Wrong \"installed\" output from setup-wren-1" \
+            "${{ steps.setup-wren-1.outputs.installed }}" \
+            "true"
+          test_equal "Wrong \"installed\" output from setup-wren-2" \
+            "${{ steps.setup-wren-2.outputs.installed }}" \
+            "${{ matrix.force }}"
