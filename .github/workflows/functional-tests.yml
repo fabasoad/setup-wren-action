@@ -60,8 +60,9 @@ jobs:
         uses: ./
         with:
           version: ${{ matrix.version }}
-      - name: Run script
-        run: wren_cli ./hello-world.wren
+      - name: Validate command
+        run: |
+          [ "$(wren_cli ./hello-world.wren)" = "Hello World!" ] || exit 1
   test-force:
     name: Test force
     runs-on: ubuntu-latest
