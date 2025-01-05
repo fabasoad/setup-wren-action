@@ -8,19 +8,42 @@
 
 This action sets up a [Wren CLI](https://wren.io/cli/).
 
+## Supported OS
+
+<!-- prettier-ignore-start -->
+| OS      |                    |
+|---------|--------------------|
+| Windows | :white_check_mark: |
+| Linux   | :white_check_mark: |
+| macOS   | :white_check_mark: |
+<!-- prettier-ignore-end -->
+
 ## Prerequisites
 
-The following tools have to be installed for successful work of this GitHub action:
-
-- Linux, macOS: [wget](https://www.gnu.org/software/wget/), [unzip](https://linux.die.net/man/1/unzip).
-- Windows: [pwsh](https://github.com/PowerShell/PowerShell)
+None.
 
 ## Inputs
 
+```yaml
+- uses: fabasoad/setup-wren-action@v1
+  with:
+    # (Optional) wren CLI version. Defaults to the latest version.
+    version: "0.4.0"
+    # (Optional) If "false" skips installation if wren CLI is already installed.
+    # If "true" installs wren CLI in any case. Defaults to "false".
+    force: "false"
+    # (Optional) GitHub token that is used to send requests to GitHub API such
+    # as downloading asset. Defaults to the token provided by GitHub Actions
+    # environment.
+    github-token: "${{ github.token }}"
+```
+
+## Outputs
+
 <!-- prettier-ignore-start -->
-| Name    | Required | Description                                                                           | Default | Possible values  |
-|---------|----------|---------------------------------------------------------------------------------------|---------|------------------|
-| version | No       | wren version that can be found [here](https://github.com/wren-lang/wren-cli/releases) | `0.4.0` | `0.3.0`, `0.4.0` |
+| Name      | Description                           | Example |
+|-----------|---------------------------------------|---------|
+| installed | Whether wren CLI was installed or not | `true`  |
 <!-- prettier-ignore-end -->
 
 ## Example usage
@@ -43,8 +66,8 @@ jobs:
     name: Setup
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@main
-      - uses: fabasoad/setup-wren-action@main
+      - uses: actions/checkout@v4
+      - uses: fabasoad/setup-wren-action@v1
       - name: Run script
         run: wren_cli ./hello-world.wren
 ```
