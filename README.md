@@ -78,3 +78,7 @@ jobs:
 Run wren_cli ./hello-world.wren
 Hello World!
 ```
+
+## Contributions
+
+![Alt](https://repobeats.axiom.co/api/embed/16d68f046ac8a3da36fda16a3089d26ac3816bcc.svg "Repobeats analytics image")

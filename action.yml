@@ -44,7 +44,7 @@ runs:
       with:
         repository: "wren-lang/wren-cli"
         latest: "${{ inputs.version == 'latest' }}"
-        tag: "${{ inputs.version != 'latest' && inputs.version || '' }}"
+        tag: "${{ inputs.version == 'latest' && '' || inputs.version }}"
         fileName: "wren*cli-${{ runner.os == 'Linux' && 'linux' || (runner.os == 'macOS' && 'mac' || 'windows') }}-*.zip"
         extract: "true"
         out-file-path: "${{ steps.info.outputs.bin-dir }}"
