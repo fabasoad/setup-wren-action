@@ -40,12 +40,12 @@ runs:
     - name: Download binary
       if: ${{ steps.info.outputs.bin-installed == 'false' }}
       id: download-binary
-      uses: robinraju/release-downloader@v1
+      uses: robinraju/release-downloader@28fc21f50d76778e7023361aa1f863e717d3d56f # v1.13
       with:
         repository: "wren-lang/wren-cli"
         latest: "${{ inputs.version == 'latest' }}"
-        tag: "${{ inputs.version == 'latest' && '' || inputs.version }}"
-        fileName: "wren*cli-${{ runner.os == 'Linux' && 'linux' || (runner.os == 'macOS' && 'mac' || 'windows') }}-*.zip"
+        tag: "${{ case(inputs.version == 'latest', '', inputs.version) }}"
+        fileName: "wren*cli-${{ case(runner.os == 'Linux', 'linux', runner.os == 'macOS', 'mac', 'windows') }}-*.zip"
         extract: "true"
         out-file-path: "${{ steps.info.outputs.bin-dir }}"
         token: "${{ inputs.github-token }}"
@@ -53,16 +53,18 @@ runs:
     - name: Install wren CLI
       if: ${{ steps.info.outputs.bin-installed == 'false' }}
       id: install-wren-cli
+      env:
+        STEP_DOWNLOAD_BINARY_OUTPUT_TAG_NAME: "${{ steps.download-binary.outputs.tag_name }}"
+        STEP_INFO_OUTPUT_BIN_PATH: "${{ steps.info.outputs.bin-path }}"
       run: |
-        tag_name="${{ steps.download-binary.outputs.tag_name }}"
-        sep="${{ steps.download-binary.outputs.tag_name == '0.3.0' && '_' || '-' }}"
-        subdir="/wren${sep}cli-${{ runner.os == 'Linux' && 'linux' || (runner.os == 'macOS' && 'mac' || 'windows') }}-${tag_name}"
-        if [ "${tag_name}" = "0.3.0" ] && [ "${RUNNER_OS}" != "Linux" ]; then
+        sep="${{ case(steps.download-binary.outputs.tag_name == '0.3.0', '_', '-') }}"
+        subdir="/wren${sep}cli-${{ case(runner.os == 'Linux', 'linux', runner.os == 'macOS', 'mac', 'windows') }}-${STEP_DOWNLOAD_BINARY_OUTPUT_TAG_NAME}"
+        if [ "${STEP_DOWNLOAD_BINARY_OUTPUT_TAG_NAME}" = "0.3.0" ] && [ "${RUNNER_OS}" != "Linux" ]; then
           subdir=""
         fi
-        bin_path="${{ steps.info.outputs.bin-path }}${subdir}"
+        bin_path="${STEP_INFO_OUTPUT_BIN_PATH}${subdir}"
         if [ "${RUNNER_OS}" = "Windows" ]; then
-          if [ "${tag_name}" = "0.3.0" ]; then
+          if [ "${STEP_DOWNLOAD_BINARY_OUTPUT_TAG_NAME}" = "0.3.0" ]; then
             mv "${bin_path}/wren_cli-0.3.0.exe" "${bin_path}/wren_cli.exe"
           fi
         else
